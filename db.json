@@ -1,0 +1,38 @@
+{
+    "products": [
+    {
+      "id": 1,
+      "name": "Ryż",
+      "caloriesPer100g": 130
+    },
+    {
+      "id": 2,
+      "name": "Kurczak",
+      "caloriesPer100g": 165
+    }
+  ],
+    "meals": [
+    {
+      "id": 1,
+      "userId": 1,
+      "name": "Obiad",
+      "date": "2025-12-20T12:30",
+      "items": [
+        { "productId": 1, "grams": 200 },
+        { "productId": 2, "grams": 150 }
+      ]
+    }
+    ],
+    "users": [
+    {
+      "id": 1,
+      "name": "Jan Kowalski",
+      "email": "jan@test.pl",
+      "password": "hashed_password",
+      "role": "user",
+      "isActive": true,
+      "dailyCalorieLimit": 2500
+    }
+  ]
+
+}
