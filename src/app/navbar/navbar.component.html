@@ -1,0 +1,9 @@
+<nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/info" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Info</a>
+    <a routerLink="/meal/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista posiłków</a>
+    <a routerLink="/meal/form" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj posiłek</a>
+    <button (click)="back()">Cofnij</button>
+</nav>
+<hr>
+<router-outlet></router-outlet>
