@@ -1,7 +1,7 @@
 import { MealItem } from "./meal-item";
 
 export interface Meal {
-    id?: number;
+    id?: string;
     userId: number;
     name: string;
     date: string; 

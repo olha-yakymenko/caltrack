@@ -1,31 +1,89 @@
 {
-    "products": [
+  "products": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Ryż",
       "caloriesPer100g": 130
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Kurczak",
       "caloriesPer100g": 165
     }
   ],
-    "meals": [
+  "meals": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
-      "name": "Obiad",
+      "name": "Obiad123",
       "date": "2025-12-20T12:30",
       "items": [
-        { "productId": 1, "grams": 200 },
-        { "productId": 2, "grams": 150 }
+        {
+          "productId": 1,
+          "grams": 200
+        }
+      ]
+    },
+    {
+      "id": "ec65",
+      "userId": 1,
+      "name": "hjvbkj",
+      "date": "2025-12-21T20:08",
+      "items": [
+        {
+          "productId": 1,
+          "grams": 10
+        }
+      ]
+    },
+    {
+      "id": "b5ee",
+      "userId": 1,
+      "name": "",
+      "date": "2025-12-20T12:30",
+      "items": [
+        {
+          "productId": 1,
+          "grams": 200
+        },
+        {
+          "productId": 1,
+          "grams": 22
+        },
+        {
+          "productId": 1,
+          "grams": 22
+        }
+      ]
+    },
+    {
+      "id": "22f8",
+      "userId": 1,
+      "name": "111",
+      "date": "2025-12-20T12:30",
+      "items": [
+        {
+          "productId": 0,
+          "grams": 200
+        }
+      ]
+    },
+    {
+      "id": "0572",
+      "userId": 1,
+      "name": "",
+      "date": "2025-12-20T12:30",
+      "items": [
+        {
+          "productId": 1,
+          "grams": 200
+        }
       ]
     }
-    ],
-    "users": [
+  ],
+  "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Jan Kowalski",
       "email": "jan@test.pl",
       "password": "hashed_password",
@@ -34,5 +92,4 @@
       "dailyCalorieLimit": 2500
     }
   ]
-
 }

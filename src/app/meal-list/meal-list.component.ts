@@ -16,12 +16,21 @@ export class MealListComponent {
 
   ngOnInit(){
     console.log("tutaj")
-    this.mealService.getMeals(1).subscribe((res) =>{
+    this.mealService.getMeals().subscribe((res) =>{
       this.meals = res;
     });
   }
 
-  deleteMeal(id: number){
-    this.mealService.deleteMeal(id)
+  deleteMeal(id: string | undefined){
+    this.mealService.deleteMeal(id).subscribe({
+    next: (savedMeal) => {
+      console.log("Meal deleted:", savedMeal);
+      alert(`Meal deleted with ID: ${savedMeal.id}`);
+    },
+    error: (err) => {
+      console.error("Error deleting meal:", err);
+      alert("Failed to delete meal. Check console.");
+    },
+  });;
   }
 }

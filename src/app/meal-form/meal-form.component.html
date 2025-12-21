@@ -1,1 +1,102 @@
-<p>meal-form works!</p>
+<form [formGroup]="mealForm">
+
+  <!-- ================== STEP 1: Podstawowe dane ================== -->
+  @if (step() === 1) {
+    <h3>Krok 1: Podstawowe informacje o posiłku</h3>
+
+    <label>
+      Nazwa posiłku:
+      <input formControlName="name" placeholder="Wpisz nazwę posiłku" />
+    </label>
+    @if (mealForm.controls.name.touched && mealForm.controls.name.errors) {
+      @if (mealForm.controls.name.errors['required']) {
+        <small class="error">Pole nazwa jest wymagane</small>
+      }
+      @if (mealForm.controls.name.errors['minlength']) {
+        <small class="error">Minimum 3 znaki</small>
+      }
+      @if (mealForm.controls.name.errors['maxlength']) {
+        <small class="error">Maksymalnie 50 znaków</small>
+      }
+    }
+
+    <label>
+      Data i godzina:
+      <input type="datetime-local" formControlName="date" />
+    </label>
+    @if (mealForm.controls.date.touched && mealForm.controls.date.errors) {
+      @if (mealForm.controls.date.errors['required']) {
+        <small class="error">Pole data jest wymagane</small>
+      }
+    }
+
+    <button type="button" (click)="next()">Dalej</button>
+  }
+
+  <!-- ================== STEP 2: Składniki ================== -->
+  @if (step() === 2) {
+    <h3>Krok 2: Składniki</h3>
+
+    <div formArrayName="items">
+      @for (item of mealForm.controls.items.controls; track $index) {
+        <div [formGroupName]="$index" class="ingredient-row">
+
+          <label>
+            Produkt (ID):
+            <input type="number" formControlName="productId" placeholder="ID produktu" />
+          </label>
+          @if (item.controls.productId.touched && item.controls.productId.errors) {
+            @if (item.controls.productId.errors['required']) {
+              <small class="error">Wybierz produkt</small>
+            }
+          }
+
+          <label>
+            Ilość w gramach:
+            <input type="number" formControlName="grams" placeholder="Ilość w gramach" />
+          </label>
+          @if (item.controls.grams.touched && item.controls.grams.errors) {
+            @if (item.controls.grams.errors['required']) {
+              <small class="error">Podaj wagę</small>
+            }
+            @if (item.controls.grams.errors['min']) {
+              <small class="error">Minimalnie 1 gram</small>
+            }
+            @if (item.controls.grams.errors['max']) {
+              <small class="error">Maksymalnie 2000 gramów</small>
+            }
+          }
+
+          <button type="button" (click)="removeItem($index)">Usuń składnik</button>
+        </div>
+      }
+    </div>
+
+    @if (mealForm.controls.items.errors?.['totalGramsInvalid']) {
+      <p class="error">Suma gramów musi być większa niż 0</p>
+    }
+
+    <button type="button" (click)="addItem()">+ Dodaj składnik</button>
+    <button type="button" (click)="back()">Wstecz</button>
+    <button type="button" (click)="next()">Dalej</button>
+  }
+
+  <!-- ================== STEP 3: Podsumowanie ================== -->
+  @if (step() === 3) {
+    <h3>Krok 3: Podsumowanie</h3>
+
+    <p><strong>Nazwa posiłku:</strong> {{ mealForm.controls.name.value }}</p>
+    <p><strong>Data i godzina:</strong> {{ mealForm.controls.date.value }}</p>
+
+    <h4>Składniki:</h4>
+    <ul>
+      @for (item of mealForm.controls.items.controls; track $index) {
+        <li>Produkt (ID): {{ item.controls.productId.value }}, Ilość: {{ item.controls.grams.value }} g</li>
+      }
+    </ul>
+
+    <button type="button" (click)="back()">Wstecz</button>
+    <button type="button" (click)="saveMeal()" [disabled]="mealForm.invalid">>Zapisz posiłek</button>
+  }
+
+</form>
