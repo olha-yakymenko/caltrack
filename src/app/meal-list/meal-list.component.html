@@ -1,1 +1,14 @@
-<p>meal-list works!</p>
+@for(meal of this.meals; track $index){
+    <div class="id">id: {{meal.id}}</div>
+    <div class="name">nazwa: {{meal.name}}</div>
+    <div class="author">data: {{meal.date}}</div>
+    <!-- @for(product of this.meals.items; track $index){ -->
+    <!-- <button (click)="deleteMeal(meal.id)">Usuń</button> -->
+        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">
+            Edytuj posiłek
+        </a>
+        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">
+            Detale
+        </a>
+
+}

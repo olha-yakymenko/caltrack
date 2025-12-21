@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { Meal } from '../interfaces/meal';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+
 import { Product } from '../interfaces/product';
 
 @Injectable({
@@ -11,12 +12,12 @@ export class MealService {
 
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   getMeals(userId: number): Observable<Meal[]> {
-    return this.http.get<Meal[]>(`${this.apiUrl}/meals?userId=${userId}`).pipe(
+    return this.httpClient.get<Meal[]>(`${this.apiUrl}/meals?userId=${userId}`).pipe(
       switchMap(meals =>
-        this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
+        this.httpClient.get<Product[]>(`${this.apiUrl}/products`).pipe(
           map(products => {
             return meals.map(meal => ({
               ...meal,
@@ -32,20 +33,31 @@ export class MealService {
   }
 
 
+//   getMeals(userId: number): Observable<Meal[]> {
+//   return this.httpClient.get<Meal[]>('http://localhost:3000/todos')
+// }
+
+
+//   getMeals(): Observable<Meal[]> {
+//   return this.httpClient.get<Meal[]>('http://localhost:3000/todos')
+// }
+
+
+
   getMeal(id: number): Observable<Meal> {
-    return this.http.get<Meal>(`${this.apiUrl}/meals/${id}`);
+    return this.httpClient.get<Meal>(`${this.apiUrl}/meals/${id}`);
   }
 
   addMeal(meal: Meal): Observable<Meal> {
-    return this.http.post<Meal>(`${this.apiUrl}/meals`, meal);
+    return this.httpClient.post<Meal>(`${this.apiUrl}/meals`, meal);
   }
 
   updateMeal(meal: Meal): Observable<Meal> {
-    return this.http.put<Meal>(`${this.apiUrl}/meals/${meal.id}`, meal);
+    return this.httpClient.put<Meal>(`${this.apiUrl}/meals/${meal.id}`, meal);
   }
 
-  deleteMeal(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/meals/${id}`);
+  deleteMeal(id: number | undefined): Observable<any> {
+    return this.httpClient.delete(`${this.apiUrl}/meals/${id}`);
   }
   
 }
