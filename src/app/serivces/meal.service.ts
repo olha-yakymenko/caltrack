@@ -14,39 +14,52 @@ export class MealService {
 
   constructor(private httpClient: HttpClient) {}
 
-  // getMeals(userId: number): Observable<Meal[]> {
-  //   return this.httpClient.get<Meal[]>(`${this.apiUrl}/meals?userId=${userId}`).pipe(
-  //     switchMap(meals =>
-  //       this.httpClient.get<Product[]>(`${this.apiUrl}/products`).pipe(
-  //         map(products => {
-  //           return meals.map(meal => ({
-  //             ...meal,
-  //             totalCalories: meal.items.reduce((acc, item) => {
-  //               const product = products.find(p => p.id === item.productId);
-  //               return acc + (product ? product.caloriesPer100g * item.grams / 100 : 0);
-  //             }, 0)
-  //           }));
-  //         })
-  //       )
-  //     )
-  //   );
-  // }
-
 
   getMeals(): Observable<Meal[]> {
   return this.httpClient.get<Meal[]>('http://localhost:3000/meals')
 }
 
 
-//   getMeals(): Observable<Meal[]> {
-//   return this.httpClient.get<Meal[]>('http://localhost:3000/todos')
-// }
-
-
 
   getMeal(id: string): Observable<Meal> {
-    return this.httpClient.get<Meal>(`${this.apiUrl}/meals/${id}`);
+    return this.httpClient.get<Meal>(`${this.apiUrl}/meals/${id}`).pipe(
+      switchMap(meal =>
+        this.httpClient.get<Product[]>(`${this.apiUrl}/products`).pipe(
+          map(products => ({
+            ...meal,
+            items: meal.items.map(item => {
+              const product = products.find(p => p.id === item.productId);
+              return {
+                ...item,
+                productName: product?.name ?? 'Nieznany produkt',
+                caloriesPer100g: product?.caloriesPer100g ?? 0
+              };
+            })
+          }))
+        )
+      )
+    );
   }
+
+  getMealWithProducts(id: string) {
+  return this.getMeal(id).pipe(
+    switchMap(meal =>
+      this.httpClient.get<Product[]>(`${this.apiUrl}/products`).pipe(
+        map(products => {
+          const itemsWithDetails = meal.items.map(item => {
+            const product = products.find(p => p.id === item.productId);
+            return {
+              ...item,
+              productName: product?.name ?? 'Unknown',
+              caloriesPer100g: product?.caloriesPer100g ?? 0
+            };
+          });
+          return { ...meal, items: itemsWithDetails };
+        })
+      )
+    )
+  );
+}
 
   addMeal(meal: Meal): Observable<Meal> {
     console.log("tutaj2")
@@ -62,4 +75,8 @@ export class MealService {
     return this.httpClient.delete(`${this.apiUrl}/meals/${id}`);
   }
   
+  getProducts(): Observable<Product[]> {
+  return this.httpClient.get<Product[]>(`${this.apiUrl}/products`);
+  }
+
 }

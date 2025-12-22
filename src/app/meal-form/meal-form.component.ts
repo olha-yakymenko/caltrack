@@ -39,7 +39,7 @@ export class MealFormComponent {
     items: new FormArray(
       [
         new FormGroup({
-          productId: new FormControl<number | null>(null, {
+          productId: new FormControl<string | null>(null, {
             validators: [Validators.required],
           }),
           grams: new FormControl<number | null>(0, {
@@ -61,20 +61,35 @@ export class MealFormComponent {
   // }
 );
 
-  ngOnInit(){
-    const id = this.route.snapshot.paramMap.get('id') as string;
-    console.log("ID z URL:", id);
-    if (id!=null){
-        this.mealService.getMeal(id).subscribe(res => {
-        this.meal = res; 
+ngOnInit() {
+  const id = this.route.snapshot.paramMap.get('id');
+  if (!id) return;
 
-        this.mealForm.get('name')?.setValue(res.name ?? ''); 
-        this.mealForm.get('date')?.setValue(res.date ?? ''); 
-        this.mealForm.get('items')?.setValue(res.items ?? []); 
+  this.mealService.getMeal(id).subscribe(res => {
+    this.meal = res;
 
-      });
-    }
-  }
+    this.mealForm.patchValue({
+      name: res.name,
+      date: res.date
+    });
+
+    this.items.clear();
+
+    res.items.forEach(item => {
+      this.items.push(
+        new FormGroup({
+          productId: new FormControl(item.productId, Validators.required),
+          grams: new FormControl(item.grams, [
+            Validators.required,
+            Validators.min(1),
+            Validators.max(2000)
+          ])
+        })
+      );
+    });
+  });
+}
+
   
   
 
@@ -116,43 +131,72 @@ export class MealFormComponent {
   });
 }
 
+private calculateTotalCalories(
+  items: MealItem[],
+  products: { id: string; caloriesPer100g: number }[]
+): number {
+  return items.reduce((sum, item) => {
+    const product = products.find(p => p.id === item.productId);
+    if (!product) return sum;
+
+    return sum + (product.caloriesPer100g * item.grams) / 100;
+  }, 0);
+}
+
 
 saveMeal() {
-  const meal: Meal = {
-    id: this.meal?.id,       
-    userId: 1,
-    name: this.mealForm.controls.name.value!,
-    date: this.mealForm.controls.date.value!,
-    items: this.mealForm.controls.items.value as MealItem[],
-  };
-  // console.log('ITEMS ERRORS:', this.mealForm.items.errors);
-console.log('FORM ERRORS:', this.mealForm.valid);
-
-
-  if (this.meal?.id) {
-    this.mealService.updateMeal(meal).subscribe({
-      next: (updatedMeal) => {
-        console.log("Meal updated:", updatedMeal);
-        alert(`Meal updated with ID: ${updatedMeal.id}`);
-      },
-      error: (err) => {
-        console.error("Error updating meal:", err);
-        alert("Failed to update meal. Check console.");
-      }
-    });
-  } else {
-    this.mealService.addMeal(meal).subscribe({
-      next: (savedMeal) => {
-        console.log("Meal saved:", savedMeal);
-        alert(`Meal saved with ID: ${savedMeal.id}`);
-      },
-      error: (err) => {
-        console.error("Error saving meal:", err);
-        alert("Failed to save meal. Check console.");
-      }
-    });
+  if (this.mealForm.invalid) {
+    this.mealForm.markAllAsTouched();
+    return;
   }
+
+  const items = this.mealForm.controls.items.value as MealItem[];
+
+  this.mealService.getProducts().subscribe(products => {
+
+    const totalCalories = items.reduce((sum, item) => {
+      const product = products.find(p => p.id === item.productId);
+      if (!product) return sum;
+
+      return sum + (product.caloriesPer100g * item.grams) / 100;
+    }, 0);
+
+    const meal: Meal = {
+      id: this.meal?.id,
+      userId: 1,
+      name: this.mealForm.controls.name.value!,
+      date: this.mealForm.controls.date.value!,
+      items,
+      totalCalories: Math.round(totalCalories),
+    };
+
+    if (this.meal?.id) {
+      this.mealService.updateMeal(meal).subscribe({
+        next: updatedMeal => {
+          console.log('Meal updated:', updatedMeal);
+          alert(`Posiłek zaktualizowany (${updatedMeal.totalCalories} kcal)`);
+        },
+        error: err => {
+          console.error(err);
+          alert('Błąd aktualizacji');
+        }
+      });
+    } else {
+      this.mealService.addMeal(meal).subscribe({
+        next: savedMeal => {
+          console.log('Meal saved:', savedMeal);
+          alert(`Posiłek zapisany (${savedMeal.totalCalories} kcal)`);
+        },
+        error: err => {
+          console.error(err);
+          alert('Błąd zapisu');
+        }
+      });
+    }
+
+  });
 }
+
 
 
 addItem() {

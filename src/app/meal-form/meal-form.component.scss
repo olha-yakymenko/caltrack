@@ -1,0 +1,135 @@
+
+form {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f4fff9; 
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  box-sizing: border-box;
+
+  h3 {
+    color: #2e7d32;
+    margin-bottom: 1rem;
+  }
+
+  h4 {
+    color: #388e3c;
+    margin-top: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: #1b5e20;
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.25rem;
+      border: 1px solid #a5d6a7;
+      border-radius: 6px;
+      background-color: #e8f5e9;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: #2e7d32;
+        outline: none;
+        box-shadow: 0 0 5px rgba(46, 125, 50, 0.5);
+      }
+    }
+  }
+
+  .ingredient-row {
+    border: 1px solid #c8e6c9;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background-color: #f1f8e9;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+
+    button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background-color: #66bb6a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #2e7d32;
+      }
+    }
+  }
+
+  .error {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  button {
+    padding: 0.6rem 1.2rem;
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #43a047;
+    color: #fff;
+    transition: background-color 0.2s;
+
+    &:hover:not(:disabled) {
+      background-color: #2e7d32;
+    }
+
+    &:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+    }
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  form {
+    padding: 1.5rem;
+
+    .ingredient-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+}
+
+
+form,
+label,
+input,
+button {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}

@@ -1,1 +1,22 @@
-<p>meal-details works!</p>
+<div class="meal-details">
+
+  <h2>Detale posiłku</h2>
+
+  <p><strong>ID:</strong> {{ meal?.id }}</p>
+  <p><strong>Nazwa posiłku:</strong> {{ meal?.name }}</p>
+  <p><strong>Data i godzina:</strong> {{ meal?.date }}</p>
+
+  <h3>Składniki:</h3>
+  <ul>
+    @for(item of itemsWithDetails; track $index) {
+      <li>
+        Produkt: {{ item.productName }} (ID: {{ item.productId }}), 
+        Ilość: {{ item.grams }} g, 
+        Kalorie: {{ (item.caloriesPer100g * item.grams / 100) }} kcal
+      </li>
+    }
+  </ul>
+
+  <!-- <button type="button" [routerLink]="['/meal/list']">Wróć do listy</button> -->
+
+</div>

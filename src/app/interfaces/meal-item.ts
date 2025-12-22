@@ -1,4 +1,5 @@
 export interface MealItem {
-    productId: number;
+    productId: string;
     grams: number;
+    ccal: number;
 }

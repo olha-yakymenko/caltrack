@@ -19,10 +19,11 @@
       "date": "2025-12-20T12:30",
       "items": [
         {
-          "productId": 1,
+          "productId": "1",
           "grams": 200
         }
-      ]
+      ],
+      "totalCalories": 260
     },
     {
       "id": "ec65",
@@ -31,30 +32,24 @@
       "date": "2025-12-21T20:08",
       "items": [
         {
-          "productId": 1,
+          "productId": "1",
           "grams": 10
         }
-      ]
+      ],
+      "totalCalories": 13
     },
     {
       "id": "b5ee",
       "userId": 1,
-      "name": "",
+      "name": "sdesd",
       "date": "2025-12-20T12:30",
       "items": [
         {
-          "productId": 1,
+          "productId": "1",
           "grams": 200
-        },
-        {
-          "productId": 1,
-          "grams": 22
-        },
-        {
-          "productId": 1,
-          "grams": 22
         }
-      ]
+      ],
+      "totalCalories": 260
     },
     {
       "id": "22f8",
@@ -63,22 +58,24 @@
       "date": "2025-12-20T12:30",
       "items": [
         {
-          "productId": 0,
+          "productId": "2",
           "grams": 200
         }
-      ]
+      ],
+      "totalCalories": 330
     },
     {
       "id": "0572",
       "userId": 1,
-      "name": "",
+      "name": "kjkjbk",
       "date": "2025-12-20T12:30",
       "items": [
         {
-          "productId": 1,
+          "productId": "1",
           "grams": 200
         }
-      ]
+      ],
+      "totalCalories": 260
     }
   ],
   "users": [

@@ -1,13 +1,15 @@
-@for(meal of this.meals; track $index){
-    <div class="id">id: {{meal.id}}</div>
-    <div class="name">nazwa: {{meal.name}}</div>
-    <div class="author">data: {{meal.date}}</div>
-<button (click)="deleteMeal(meal.id)">Usuń</button>
-        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">
-            Edytuj posiłek
-        </a>
-        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">
-            Detale
-        </a>
-
-}
+<div class="meal-list">
+  @for(meal of this.meals; track $index){
+    <div class="meal-card">
+      <div class="meal-id"><strong>ID:</strong> {{meal.id}}</div>
+      <div class="meal-name"><strong>Nazwa:</strong> {{meal.name}}</div>
+      <div class="meal-date"><strong>Data:</strong> {{meal.date}}</div>
+      <div class="meal-kcal"><strong>Kalorie:</strong> {{meal.totalCalories}}</div>
+      <div class="meal-actions">
+        <button (click)="deleteMeal(meal.id)">Usuń</button>
+        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">Edytuj</a>
+        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">Detale</a>
+      </div>
+    </div>
+  }
+</div>
