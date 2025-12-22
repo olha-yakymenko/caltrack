@@ -1,4 +1,56 @@
+<div class="meal-sort">
+  <span>Sortuj:</span>
+
+  <button type="button" (click)="sortMealsAsc()">Nazwa ↑</button>
+  <button type="button" (click)="sortMealsDecs()">Nazwa ↓</button>
+
+  <button type="button" (click)="sortDateAsc()">Data ↑</button>
+  <button type="button" (click)="sortDateDesc()">Data ↓</button>
+
+  <button type="button" (click)="sortCaloriesAsc()">Kalorie ↑</button>
+  <button type="button" (click)="sortCaloriesDesc()">Kalorie ↓</button>
+</div>
+
+<div class="meal-filters">
+
+  <!-- TEXT -->
+  <input
+    type="text"
+    placeholder="Szukaj po nazwie..."
+    (input)="onNameFilterChange($event)"
+  />
+
+  <!-- DROPDOWN -->
+  <select (change)="onCaloriesFilterChange($event)">
+    <option value="">Wszystkie kalorie</option>
+    <option value="low">0–500 kcal</option>
+    <option value="medium">501–1000 kcal</option>
+    <option value="high">1000+ kcal</option>
+  </select>
+
+  <!-- CHECKBOX -->
+  <label class="checkbox">
+    <input
+      type="checkbox"
+      (change)="onUnderLimitChange($event)"
+    />
+    Tylko poniżej limitu
+  </label>
+
+</div>
+
+
 <div class="meal-list">
+  @for (meal of filteredMeals; track meal.id) {
+    <div class="meal-card">
+      <div><strong>{{ meal.name }}</strong></div>
+      <div>Data: {{ meal.date }}</div>
+      <div>Kalorie: {{ meal.totalCalories }} kcal</div>
+    </div>
+  }
+</div>
+
+<!-- <div class="meal-list">
   @for(meal of this.meals; track $index){
     <div class="meal-card">
       <div class="meal-id"><strong>ID:</strong> {{meal.id}}</div>
@@ -12,4 +64,4 @@
       </div>
     </div>
   }
-</div>
+</div> -->

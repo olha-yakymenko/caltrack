@@ -87,6 +87,15 @@
       "role": "user",
       "isActive": true,
       "dailyCalorieLimit": 2500
+    },
+        {
+      "id": "2",
+      "name": "Jan Kowalski",
+      "email": "jan2@test.pl",
+      "password": "hashed_password",
+      "role": "admin",
+      "isActive": true,
+      "dailyCalorieLimit": 2500
     }
   ]
 }
