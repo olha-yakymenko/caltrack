@@ -1,0 +1,76 @@
+.info-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+  font-family: 'Segoe UI', sans-serif;
+  color: #2e3d2f;
+}
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: white;
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+.content {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #2e7d32;
+  }
+
+  p {
+    line-height: 1.6;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding-left: 1.5rem;
+      margin-bottom: 0.6rem;
+      position: relative;
+
+      &::before {
+        content: "✔";
+        position: absolute;
+        left: 0;
+        color: #43a047;
+        font-weight: bold;
+      }
+    }
+  }
+}

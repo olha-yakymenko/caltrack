@@ -13,6 +13,14 @@ export class MealListComponent {
   meals: Meal[] =[];
   filteredMeals: Meal[] = [];
 
+  currentPage = 1;
+  pageSize = 5;
+  pageSizeOptions = [5, 10, 20];
+
+  totalPages = 1;
+  pagedMeals: Meal[] = [];
+
+
   constructor(protected mealService: MealService){}
 
   ngOnInit(){
@@ -20,6 +28,7 @@ export class MealListComponent {
     this.mealService.getMeals().subscribe((res) =>{
       this.meals = res;
       this.filteredMeals = res;
+      this.applyPagination(); 
     });
   }
 
@@ -42,29 +51,46 @@ export class MealListComponent {
   );
 }
 
+private applyPagination(): void {
+  this.totalPages = Math.ceil(this.filteredMeals.length / this.pageSize);
+
+  const startIndex = (this.currentPage - 1) * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+
+  this.pagedMeals = this.filteredMeals.slice(startIndex, endIndex);
+}
+
 
   public sortMealsDecs(): void {
   this.meals = [...this.meals].sort((a, b) =>
     b.name.localeCompare(a.name)
   );
+  this.applyPagination();
+
 }
 
 public sortDateAsc(): void {
   this.meals = [...this.meals].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
+  this.applyPagination();
+
 }
 
 public sortDateDesc(): void {
   this.meals = [...this.meals].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+  this.applyPagination();
+
 }
 
 public sortCaloriesAsc(): void {
   this.meals = [...this.meals].sort(
     (a, b) => (a.totalCalories ?? 0) - (b.totalCalories ?? 0)
   );
+  this.applyPagination();
+
 }
 
 
@@ -72,6 +98,8 @@ public sortCaloriesDesc(): void {
   this.meals = [...this.meals].sort(
     (a, b) => (b.totalCalories ?? 0) - (a.totalCalories ?? 0)
   );
+  this.applyPagination();
+
 }
 
 
@@ -84,16 +112,22 @@ nameFilter = '';
 onNameFilterChange(event: Event) {
     this.nameFilter = (event.target as HTMLInputElement).value.toLowerCase();
     this.applyFilters();
+    this.applyPagination();
+
   }
 
   onCaloriesFilterChange(event: Event) {
     this.caloriesFilter = (event.target as HTMLSelectElement).value as any;
     this.applyFilters();
+    this.applyPagination();
+
   }
 
   onUnderLimitChange(event: Event) {
     this.underLimitOnly = (event.target as HTMLInputElement).checked;
     this.applyFilters();
+    this.applyPagination();
+
   }
 
   /* ===== główna logika ===== */
@@ -122,5 +156,23 @@ onNameFilterChange(event: Event) {
 
       return true;
     });
+
+    this.currentPage = 1; // reset strony po filtrze
+    this.applyPagination();
+
   }
+
+
+  goToPage(page: number): void {
+  if (page < 1 || page > this.totalPages) return;
+  this.currentPage = page;
+  this.applyPagination();
+}
+
+changePageSize(event: Event): void {
+  this.pageSize = Number((event.target as HTMLSelectElement).value);
+  this.currentPage = 1;
+  this.applyPagination();
+}
+
 }

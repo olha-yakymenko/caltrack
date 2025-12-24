@@ -41,7 +41,8 @@
 
 
 <div class="meal-list">
-  @for (meal of filteredMeals; track meal.id) {
+  <!-- @for (meal of filteredMeals; track meal.id) { -->
+   @for (meal of pagedMeals; track meal.id) {
     <div class="meal-card">
       <div><strong>{{ meal.name }}</strong></div>
       <div>Data: {{ meal.date }}</div>
@@ -49,6 +50,39 @@
     </div>
   }
 </div>
+
+<div class="pagination">
+
+  <button
+    type="button"
+    (click)="goToPage(currentPage - 1)"
+    [disabled]="currentPage === 1"
+  >
+    ◀
+  </button>
+
+  <span>
+    Strona {{ currentPage }} / {{ totalPages }}
+  </span>
+
+  <button
+    type="button"
+    (click)="goToPage(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+  >
+    ▶
+  </button>
+
+  <select (change)="changePageSize($event)">
+    @for (size of pageSizeOptions; track size) {
+      <option [value]="size" [selected]="size === pageSize">
+        {{ size }}
+      </option>
+    }
+  </select>
+
+</div>
+
 
 <!-- <div class="meal-list">
   @for(meal of this.meals; track $index){
