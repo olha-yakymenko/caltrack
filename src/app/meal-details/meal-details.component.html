@@ -17,6 +17,9 @@
     }
   </ul>
 
+        <button (click)="deleteMeal(meal?.id)">Usuń</button>
+        <a [routerLink]="['/meal', meal?.id, 'form']" routerLinkActive="active">Edytuj</a>
+
   <!-- <button type="button" [routerLink]="['/meal/list']">Wróć do listy</button> -->
 
 </div>

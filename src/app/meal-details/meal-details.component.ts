@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MealService } from '../serivces/meal.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Meal } from '../interfaces/meal';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
@@ -13,6 +13,7 @@ interface MealItemWithProduct {
 
 @Component({
   selector: 'app-meal-details',
+  imports: [RouterModule],
   templateUrl: './meal-details.component.html',
   styleUrls: ['./meal-details.component.scss']
 })
@@ -57,4 +58,18 @@ export class MealDetailsComponent {
       this.itemsWithDetails = result;
     });
   }
+
+  deleteMeal(id: string | undefined){
+    this.mealService.deleteMeal(id).subscribe({
+    next: (savedMeal) => {
+      console.log("Meal deleted:", savedMeal);
+      alert(`Meal deleted with ID: ${savedMeal.id}`);
+    },
+    error: (err) => {
+      console.error("Error deleting meal:", err);
+      alert("Failed to delete meal. Check console.");
+    },
+  });;
+  }
+
 }

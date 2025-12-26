@@ -60,6 +60,17 @@
   }
 }
 
+      button, a {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+
 @media (max-width: 600px) {
   .meal-details {
     padding: 1rem;

@@ -47,6 +47,11 @@
       <div><strong>{{ meal.name }}</strong></div>
       <div>Data: {{ meal.date }}</div>
       <div>Kalorie: {{ meal.totalCalories }} kcal</div>
+      <div class="meal-actions">
+        <button (click)="deleteMeal(meal.id)">Usuń</button>
+        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">Edytuj</a>
+        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">Detale</a>
+      </div>
     </div>
   }
 </div>
