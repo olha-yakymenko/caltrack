@@ -82,8 +82,8 @@
     {
       "id": "1",
       "name": "Jan Kowalski",
-      "email": "jan@test.pl",
-      "password": "hashed_password",
+      "email": "a@a.com",
+      "password": "a",
       "role": "user",
       "isActive": true,
       "dailyCalorieLimit": 2500

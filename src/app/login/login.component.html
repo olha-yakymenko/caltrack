@@ -1,0 +1,18 @@
+<h2>Logowanie</h2>
+
+<form [formGroup]="loginForm" (ngSubmit)="submit()">
+  
+  <input type="email" formControlName="email" placeholder="Email" />
+  <input type="password" formControlName="password" placeholder="Hasło" />
+
+  <button type="submit" [disabled]="loginForm.invalid">
+    Zaloguj
+  </button>
+
+</form>
+
+@if (error) {
+  <div class="error-message">
+    {{ error }}
+  </div>
+}

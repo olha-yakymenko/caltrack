@@ -4,6 +4,18 @@
     <a routerLink="/meal/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista posiłków</a>
     <a routerLink="/meal/form" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj posiłek</a>
     <button (click)="back()">Cofnij</button>
+
+    @if (authService.currentUser$ | async; as user) {
+      <div>Witaj, <strong>{{ user.name }}</strong> ({{ user.email }})</div>
+      
+      @if (user.role === 'admin') {
+        <a routerLink="/admin">Panel Admina</a>
+      }
+
+        <button (click)="authService.logout()">Wyloguj</button>
+    } @else {
+      <a routerLink="/login">Zaloguj się</a>
+    }
 </nav>
 <hr>
 <router-outlet></router-outlet>
