@@ -2,7 +2,7 @@
   <span>Sortuj:</span>
 
   <button type="button" (click)="sortMealsAsc()">Nazwa ↑</button>
-  <button type="button" (click)="sortMealsDecs()">Nazwa ↓</button>
+  <button type="button" (click)="sortMealsDesc()">Nazwa ↓</button>
 
   <button type="button" (click)="sortDateAsc()">Data ↑</button>
   <button type="button" (click)="sortDateDesc()">Data ↓</button>
@@ -13,14 +13,12 @@
 
 <div class="meal-filters">
 
-  <!-- TEXT -->
   <input
     type="text"
     placeholder="Szukaj po nazwie..."
     (input)="onNameFilterChange($event)"
   />
 
-  <!-- DROPDOWN -->
   <select (change)="onCaloriesFilterChange($event)">
     <option value="">Wszystkie kalorie</option>
     <option value="low">0–500 kcal</option>
@@ -28,7 +26,6 @@
     <option value="high">1000+ kcal</option>
   </select>
 
-  <!-- CHECKBOX -->
   <label class="checkbox">
     <input
       type="checkbox"
@@ -41,7 +38,6 @@
 
 
 <div class="meal-list">
-  <!-- @for (meal of filteredMeals; track meal.id) { -->
    @for (meal of pagedMeals; track meal.id) {
     <div class="meal-card">
       <div><strong>{{ meal.name }}</strong></div>
@@ -87,20 +83,3 @@
   </select>
 
 </div>
-
-
-<!-- <div class="meal-list">
-  @for(meal of this.meals; track $index){
-    <div class="meal-card">
-      <div class="meal-id"><strong>ID:</strong> {{meal.id}}</div>
-      <div class="meal-name"><strong>Nazwa:</strong> {{meal.name}}</div>
-      <div class="meal-date"><strong>Data:</strong> {{meal.date}}</div>
-      <div class="meal-kcal"><strong>Kalorie:</strong> {{meal.totalCalories}}</div>
-      <div class="meal-actions">
-        <button (click)="deleteMeal(meal.id)">Usuń</button>
-        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">Edytuj</a>
-        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">Detale</a>
-      </div>
-    </div>
-  }
-</div> -->

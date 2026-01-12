@@ -1,3 +1,6 @@
+$mobile-breakpoint: 768px;
+$small-mobile: 480px;
+
 .meal-details {
   max-width: 800px;
   margin: 2rem auto;
@@ -7,19 +10,47 @@
   border-radius: 10px;
   font-family: 'Arial', sans-serif;
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 
-  h2, h3 {
+  @media (max-width: $mobile-breakpoint) {
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 95%;
+  }
+
+  @media (max-width: $small-mobile) {
+    padding: 0.75rem;
+  }
+
+  h2 {
     color: #2e7d32; 
     margin-bottom: 1rem;
+    font-size: 1.8rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.5rem;
+    }
+  }
+
+  h3 {
+    color: #2e7d32;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.2rem;
+    }
   }
 
   p {
     margin: 0.3rem 0;
     color: #1b5e20;
     font-weight: 500;
+    font-size: 1rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 0.9rem;
+    }
   }
 
   ul {
@@ -33,21 +64,35 @@
       padding: 0.5rem 0.75rem;
       border-radius: 6px;
       color: #1b5e20;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
       box-sizing: border-box;
+      font-size: 0.95rem;
+
+      @media (max-width: $mobile-breakpoint) {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+      }
     }
   }
 
-  button {
+  button, a {
     padding: 0.5rem 1rem;
     border-radius: 6px;
     border: none;
     font-weight: 600;
     cursor: pointer;
+    font-size: 15px;
     color: #fff;
     background-color: #43a047;
     transition: background-color 0.2s;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+
+    @media (max-width: $mobile-breakpoint) {
+      width: 100%;
+      margin-top: 0.5rem;
+      font-size: 14px;
+    }
 
     &:hover:not(:disabled) {
       background-color: #2e7d32;
@@ -58,41 +103,37 @@
       cursor: not-allowed;
     }
   }
-}
 
-      button, a {
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-weight: 600;
-        text-decoration: none;
-        text-align: center;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
+  a {
+    margin-left: 10px;
 
-
-@media (max-width: 600px) {
-  .meal-details {
-    padding: 1rem;
-
-    ul li {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.6rem;
-    }
-
-    button {
-      width: 100%;
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
       margin-top: 0.5rem;
     }
   }
 }
 
+@media (max-width: $small-mobile) {
+  .meal-details {
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    button, a {
+      padding: 0.4rem 0.8rem;
+      font-size: 13px;
+    }
+  }
+}
 
 form,
 label,
 input,
 button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }

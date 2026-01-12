@@ -15,15 +15,26 @@
     {
       "id": "1",
       "userId": 1,
-      "name": "Obiad123",
+      "name": "Obiad12345",
       "date": "2025-12-20T12:30",
       "items": [
         {
           "productId": "1",
+          "productName": "Ryż",
           "grams": 200
+        },
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 100
+        },
+        {
+          "productId": "1",
+          "productName": "Ryż",
+          "grams": 100
         }
       ],
-      "totalCalories": 260
+      "totalCalories": 555
     },
     {
       "id": "ec65",
@@ -76,6 +87,58 @@
         }
       ],
       "totalCalories": 260
+    },
+    {
+      "id": "2373",
+      "userId": 1,
+      "name": "efad",
+      "date": "2025-12-27T22:39",
+      "items": [
+        {
+          "productId": "1",
+          "grams": 2000
+        }
+      ],
+      "totalCalories": 2600
+    },
+    {
+      "id": "4b68",
+      "userId": 1,
+      "name": "sdfmvc",
+      "date": "2026-01-11T16:03",
+      "items": [
+        {
+          "productId": "1",
+          "grams": 1000
+        }
+      ],
+      "totalCalories": 1300
+    },
+    {
+      "id": "deb4",
+      "userId": 1,
+      "name": "sdfv",
+      "date": "2026-01-11T16:03",
+      "items": [
+        {
+          "productId": "2",
+          "grams": 1400
+        }
+      ],
+      "totalCalories": 2310
+    },
+    {
+      "id": "b61f",
+      "userId": 1,
+      "name": "fdsvs",
+      "date": "2026-01-11T21:12",
+      "items": [
+        {
+          "productId": "1",
+          "grams": 10
+        }
+      ],
+      "totalCalories": 13
     }
   ],
   "users": [
@@ -88,7 +151,7 @@
       "isActive": true,
       "dailyCalorieLimit": 2500
     },
-        {
+    {
       "id": "2",
       "name": "Jan Kowalski",
       "email": "jan2@test.pl",

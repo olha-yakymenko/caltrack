@@ -8,6 +8,6 @@ import { NavbarComponent } from "./navbar/navbar.component";
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class AppComponent {
   protected readonly title = signal('caltrack');
 }

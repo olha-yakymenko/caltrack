@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { FormArray,
   FormControl,
   FormGroup,
@@ -9,63 +9,74 @@ import { MealService } from '../serivces/meal.service';
 import { Meal } from '../interfaces/meal';
 import { MealItem } from '../interfaces/meal-item';
 import { totalGramsValidator } from '../validators/total-grams.validator';
+import { Observable } from 'rxjs';
+import { Product } from '../interfaces/product';
 
 @Component({
   selector: 'app-meal-form',
+  standalone: true,
   imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './meal-form.component.html',
-  styleUrl: './meal-form.component.scss',
+  styleUrls: ['./meal-form.component.scss'],
 })
-export class MealFormComponent {
+export class MealFormComponent implements OnInit {
 
-  meal: Meal | null = null;
+  public meal: Meal | null = null;
+  public step = signal(1);
 
-  constructor(private mealService: MealService, private route: ActivatedRoute){}
+  private mealService = inject(MealService);
+  private route = inject(ActivatedRoute);
 
-  mealForm = new FormGroup(
-  {
-    name: new FormControl<string | null>('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-      ],
-    }),
+  public mealForm = new FormGroup({
+  name: new FormControl<string | null>('', {
+    validators: [
+      (c) => Validators.required(c),
+      (c) => Validators.minLength(3)(c),
+      (c) => Validators.maxLength(50)(c),
+    ],
+  }),
 
-    date: new FormControl<string | null>('', {
-      validators: [Validators.required],
-    }),
+  date: new FormControl<string | null>('', {
+    validators: [(c) => Validators.required(c)],
+  }),
 
-    items: new FormArray(
-      [
-        new FormGroup({
-          productId: new FormControl<string | null>(null, {
-            validators: [Validators.required],
-          }),
-          grams: new FormControl<number | null>(0, {
-            validators: [
-              Validators.required,
-              Validators.min(1),
-              Validators.max(2000),
-            ],
-          }),
+  items: new FormArray(
+    [
+      new FormGroup({
+        productId: new FormControl<string | null>(null, {
+          validators: [(c) => Validators.required(c)],
         }),
-      ],
-      {
-        validators: [totalGramsValidator], 
-      }
-    ),
-  },
-  // {
-  //   updateOn: 'change',
-  // }
-);
+        productName: new FormControl<string>(''),
+        grams: new FormControl<number | null>(0, {
+          validators: [
+            (c) => Validators.required(c),
+            (c) => Validators.min(1)(c),
+            (c) => Validators.max(2000)(c),
+          ],
+        }),
+      }),
+    ],
+    {
+      validators: [(c) => totalGramsValidator(c)],
+    }
+  ),
+});
 
-ngOnInit() {
+private products: Product[] = [];
+public filteredProducts: Product[][] = [];
+
+
+public ngOnInit(): void {
+  this.mealService.getProducts().subscribe((products) => {
+  this.products = products;
+});
+
+
   const id = this.route.snapshot.paramMap.get('id');
+  console.log("id", id);
   if (!id) return;
 
-  this.mealService.getMeal(id).subscribe(res => {
+  this.mealService.getMeal(id).subscribe((res) => {
     this.meal = res;
 
     this.mealForm.patchValue({
@@ -74,91 +85,65 @@ ngOnInit() {
     });
 
     this.items.clear();
+    this.filteredProducts = [];
 
-    res.items.forEach(item => {
+
+    res.items.forEach((item) => {
+      this.filteredProducts.push([]);
       this.items.push(
         new FormGroup({
-          productId: new FormControl(item.productId, Validators.required),
-          grams: new FormControl(item.grams, [
-            Validators.required,
-            Validators.min(1),
-            Validators.max(2000)
-          ])
+          productId: new FormControl<string | null>(
+            String(item.productId),
+            [(c) => Validators.required(c)]
+          ),
+          productName: new FormControl<string>(
+      this.getProductName(String(item.productId)) 
+    ),
+          grams: new FormControl<number | null>(item.grams, [
+            (c) => Validators.required(c),
+            (c) => Validators.min(1)(c),
+            (c) => Validators.max(2000)(c),
+          ]),
         })
       );
     });
   });
-}
+};
 
-  
-  
 
-  getMeal(id: string){
-    return this.mealService.getMeal(id)
+  public get items(): FormArray {
+    return this.mealForm.get('items') as FormArray;
   }
 
-  edit(id: string) {
-  const meal: Meal = {
-    id,
-    userId: 1, 
-    name: this.mealForm.controls.name.value!,
-    date: this.mealForm.controls.date.value!,
-    items: this.mealForm.controls.items.value as MealItem[],
-  };
+  public getMeal(id: string): Observable<Meal>{
+    return this.mealService.getMeal(id);
+  }
 
-  this.mealService.updateMeal(meal);
-}
+public edit = (_id: string): void => {
+  this.saveMeal();
+};
 
-
-
-  submit() {
-  const meal: Meal = {
-    userId: 1,
-    name: this.mealForm.controls.name.value!,
-    date: this.mealForm.controls.date.value!,
-    items: this.mealForm.controls.items.value as MealItem[],
-  };
-
-  this.mealService.addMeal(meal).subscribe({
-    next: (savedMeal) => {
-      console.log("Meal saved:", savedMeal);
-      alert(`Meal saved with ID: ${savedMeal.id}`);
-    },
-    error: (err) => {
-      console.error("Error saving meal:", err);
-      alert("Failed to save meal. Check console.");
-    },
-  });
-}
-
-private calculateTotalCalories(
-  items: MealItem[],
-  products: { id: string; caloriesPer100g: number }[]
-): number {
-  return items.reduce((sum, item) => {
-    const product = products.find(p => p.id === item.productId);
-    if (!product) return sum;
-
-    return sum + (product.caloriesPer100g * item.grams) / 100;
-  }, 0);
-}
+public submit = (): void => {
+  this.saveMeal();
+};
 
 
-saveMeal() {
+
+public saveMeal = (): void => {
   if (this.mealForm.invalid) {
     this.mealForm.markAllAsTouched();
-    return;
+    
+return;
   }
 
   const items = this.mealForm.controls.items.value as MealItem[];
 
-  this.mealService.getProducts().subscribe(products => {
-
+  this.mealService.getProducts().subscribe((products) => {
     const totalCalories = items.reduce((sum, item) => {
-      const product = products.find(p => p.id === item.productId);
+      const product = products.find((p) => String(p.id) === String(item.productId));
       if (!product) return sum;
-
-      return sum + (product.caloriesPer100g * item.grams) / 100;
+      
+return sum + (product.caloriesPer100g * (item.grams || 0)) / 100;
     }, 0);
 
     const meal: Meal = {
@@ -172,71 +157,98 @@ saveMeal() {
 
     if (this.meal?.id) {
       this.mealService.updateMeal(meal).subscribe({
-        next: updatedMeal => {
+        next: (updatedMeal) => {
           console.log('Meal updated:', updatedMeal);
           alert(`Posiłek zaktualizowany (${updatedMeal.totalCalories} kcal)`);
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
           alert('Błąd aktualizacji');
         }
       });
     } else {
       this.mealService.addMeal(meal).subscribe({
-        next: savedMeal => {
+        next: (savedMeal) => {
           console.log('Meal saved:', savedMeal);
           alert(`Posiłek zapisany (${savedMeal.totalCalories} kcal)`);
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
           alert('Błąd zapisu');
         }
       });
     }
-
   });
-}
+};
 
 
+public addItem = (): void => {
+  this.filteredProducts.push([]);
 
-addItem() {
   const itemGroup = new FormGroup({
-    productId: new FormControl<number | null>(null, {
-      validators: [Validators.required],
-    }),
-    grams: new FormControl<number | null>(null, {
-      validators: [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(2000),
-      ],
-    }),
-  });
+  productId: new FormControl<string | null>(
+    null,
+    [(c) => Validators.required(c)]
+  ),
+  productName: new FormControl<string>(''),
+  grams: new FormControl<number | null>(null, [
+    (c) => Validators.required(c),
+    (c) => Validators.min(1)(c),
+    (c) => Validators.max(2000)(c),
+  ]),
+});
+
 
   this.items.push(itemGroup);
   this.items.updateValueAndValidity();
-}
+};
 
+public next = (): void => {
+  this.step.update((value) => value + 1);
+};
 
+public back = (): void => {
+  this.step.update((value) => value - 1);
+};
 
-  step = signal(1);
-
-  next() {
-    this.step.update(value => value + 1);
-  }
-
-  back() {
-    this.step.update(value => value - 1);
-  }
-
-  get items(): FormArray {
-  return this.mealForm.get('items') as FormArray;
-}
-
-removeItem(index: number) {
+public removeItem = (index: number): void => {
   if (this.items.length > 1) {
     this.items.removeAt(index);
+    this.filteredProducts.splice(index, 1);
   }
+};
+
+
+public onSearch(value: string | null, index: number): void {
+  if (!value) {
+    this.filteredProducts[index] = [];
+    
+return;
+  }
+
+  this.filteredProducts[index] = this.products.filter((p) =>
+    p.name.toLowerCase().includes(value.toLowerCase())
+  );
 }
+
+
+public selectProduct(product: Product, index: number): void {
+
+  const group = this.items.at(index) as FormGroup;
+
+  group.patchValue({
+    productId: String(product.id),
+    productName: product.name
+  });
+
+  this.filteredProducts[index] = [];
+}
+
+public getProductName(productId: string | null): string {
+  const product = this.products.find((p) => String(p.id) === productId);
+  
+  return product ? product.name : '';
+}
+
 
 }

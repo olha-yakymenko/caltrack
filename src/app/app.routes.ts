@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { NAVBAR_ROUTES } from './navbar/navbar.routes'; 
 import { InfoComponent } from './info/info.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';

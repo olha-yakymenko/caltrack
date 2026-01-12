@@ -1,3 +1,5 @@
+$mobile-breakpoint: 768px;
+$small-mobile: 480px;
 
 form {
   max-width: 700px;
@@ -9,14 +11,34 @@ form {
   font-family: 'Arial', sans-serif;
   box-sizing: border-box;
 
+  @media (max-width: $mobile-breakpoint) {
+    margin: 1rem auto;
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+
+  @media (max-width: $small-mobile) {
+    padding: 1rem;
+  }
+
   h3 {
     color: #2e7d32;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.3rem;
+    }
   }
 
   h4 {
     color: #388e3c;
     margin-top: 1.5rem;
+    font-size: 1.2rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.1rem;
+    }
   }
 
   label {
@@ -24,6 +46,11 @@ form {
     margin-bottom: 1rem;
     font-weight: 500;
     color: #1b5e20;
+    font-size: 0.95rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 0.9rem;
+    }
 
     input {
       display: block;
@@ -35,6 +62,12 @@ form {
       background-color: #e8f5e9;
       font-size: 1rem;
       transition: border-color 0.2s;
+      box-sizing: border-box;
+
+      @media (max-width: $mobile-breakpoint) {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+      }
 
       &:focus {
         border-color: #2e7d32;
@@ -55,6 +88,13 @@ form {
     gap: 1rem;
     align-items: center;
 
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+
     button {
       margin-top: 0.5rem;
       padding: 0.4rem 0.8rem;
@@ -64,6 +104,12 @@ form {
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.2s;
+      font-size: 0.9rem;
+
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+        padding: 0.5rem;
+      }
 
       &:hover {
         background-color: #2e7d32;
@@ -76,6 +122,10 @@ form {
     font-size: 0.85rem;
     margin-top: 0.25rem;
     display: block;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 0.8rem;
+    }
   }
 
   button {
@@ -89,6 +139,14 @@ form {
     background-color: #43a047;
     color: #fff;
     transition: background-color 0.2s;
+    font-size: 0.95rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      width: 100%;
+      margin-right: 0;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+    }
 
     &:hover:not(:disabled) {
       background-color: #2e7d32;
@@ -99,37 +157,25 @@ form {
       cursor: not-allowed;
     }
   }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-mobile) {
   form {
-    padding: 1.5rem;
-
     .ingredient-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.5rem;
+      button {
+        font-size: 0.85rem;
+      }
     }
 
     button {
-      width: 100%;
-      margin-right: 0;
+      font-size: 0.9rem;
     }
   }
 }
-
 
 form,
 label,
 input,
 button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }

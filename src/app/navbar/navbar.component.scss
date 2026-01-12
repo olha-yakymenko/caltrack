@@ -1,3 +1,6 @@
+$mobile-breakpoint: 768px;
+$small-mobile: 480px;
+
 nav {
   display: flex;
   flex-wrap: wrap; 
@@ -9,6 +12,14 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 0 0 8px 8px;
   font-family: Arial, sans-serif;
+  box-sizing: border-box;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
 
   a {
     text-decoration: none;
@@ -17,6 +28,15 @@ nav {
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
     transition: background-color 0.2s, color 0.2s;
+    font-size: 0.95rem;
+    text-align: center;
+    box-sizing: border-box;
+
+    @media (max-width: $mobile-breakpoint) {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background-color: #d0f0d0;
@@ -39,6 +59,16 @@ nav {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
+    box-sizing: border-box;
+
+    @media (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+      order: 3;
+      margin-top: 0.5rem;
+    }
 
     &:hover {
       background-color: #2e7d32; 
@@ -51,26 +81,13 @@ nav {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-mobile) {
   nav {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
+    padding: 0.5rem;
 
-    a,
-    button {
-      width: 100%;
-      text-align: center;
-    }
-
-    button {
-      margin-left: 0;
+    a, button {
+      font-size: 0.85rem;
+      padding: 0.5rem;
     }
   }
-}
-
-nav, a, button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }

@@ -8,26 +8,33 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-
       let message = 'Wystąpił nieznany błąd';
 
       switch (error.status) {
         case 400:
-          message = error.error?.message ?? 'Błędne dane';
+          if (
+            typeof error.error === 'object' &&
+            error.error !== null &&
+            'message' in error.error
+          ) {
+            message = String((error.error as { message: unknown }).message);
+          } else {
+            message = 'Błędne dane';
+          }
           break;
 
         case 403:
           message = 'Brak uprawnień do wykonania tej akcji';
-          router.navigate(['/no-access']);
+          void router.navigate(['/no-access']);
           break;
 
         case 404:
           message = 'Zasób nie istnieje';
           break;
 
-        case 409:
-          message = 'Nie można usunąć – element jest powiązany z innymi danymi';
-          break;
+        // case 409:
+        //   message = 'Nie można usunąć – element jest powiązany z innymi danymi';
+        //   break;
 
         case 500:
           message = 'Błąd serwera';

@@ -1,3 +1,6 @@
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
 .info-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #e8f5e9, #ffffff);
@@ -5,16 +8,27 @@
   color: #2e3d2f;
 }
 
-/* ===== HERO ===== */
 .hero {
   text-align: center;
   padding: 4rem 1.5rem;
   background: linear-gradient(135deg, #2e7d32, #43a047);
   color: white;
 
+  @media (max-width: $mobile-breakpoint) {
+    padding: 3rem 1rem;
+  }
+
   h1 {
     font-size: 2.8rem;
     margin-bottom: 0.5rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.8rem;
+    }
   }
 
   p {
@@ -22,6 +36,11 @@
     opacity: 0.95;
     max-width: 600px;
     margin: 0 auto;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1rem;
+      padding: 0 0.5rem;
+    }
   }
 }
 
@@ -32,6 +51,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+
+  @media (max-width: $mobile-breakpoint) {
+    margin: 2rem auto;
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
 }
 
 .card {
@@ -41,6 +66,10 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
+  @media (max-width: $mobile-breakpoint) {
+    padding: 1.5rem;
+  }
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
@@ -49,10 +78,20 @@
   h2 {
     margin-bottom: 1rem;
     color: #2e7d32;
+    font-size: 1.5rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.3rem;
+    }
   }
 
   p {
     line-height: 1.6;
+    font-size: 1rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 0.9rem;
+    }
   }
 
   ul {
@@ -63,6 +102,12 @@
       padding-left: 1.5rem;
       margin-bottom: 0.6rem;
       position: relative;
+      font-size: 0.95rem;
+
+      @media (max-width: $mobile-breakpoint) {
+        font-size: 0.85rem;
+        padding-left: 1.2rem;
+      }
 
       &::before {
         content: "✔";

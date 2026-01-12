@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MealService } from '../serivces/meal.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Meal } from '../interfaces/meal';
@@ -17,19 +17,21 @@ interface MealItemWithProduct {
   templateUrl: './meal-details.component.html',
   styleUrls: ['./meal-details.component.scss']
 })
-export class MealDetailsComponent {
-  meal: Meal | null = null;
-  itemsWithDetails: MealItemWithProduct[] = [];
+export class MealDetailsComponent implements OnInit {
+  public meal: Meal | null = null;
+  public itemsWithDetails: MealItemWithProduct[] = [];
 
-  constructor(private mealService: MealService, private route: ActivatedRoute){}
+  private mealService = inject(MealService);
+  private route = inject(ActivatedRoute);
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.route.paramMap.pipe(
 
       /** switchMap – reaguje na zmianę ID w URL */
-      switchMap(params => {
+      switchMap((params) => {
         const id = params.get('id')!;
-        return combineLatest([
+        
+return combineLatest([
           this.mealService.getMeal(id),
           this.mealService.getProducts()
         ]);
@@ -43,9 +45,10 @@ export class MealDetailsComponent {
 
       /** map – łączenie danych */
       map(([meal, products]) =>
-        meal.items.map(item => {
-          const product = products.find(p => p.id === item.productId);
-          return {
+        meal.items.map((item) => {
+          const product = products.find((p) => p.id === item.productId);
+          
+return {
             productId: item.productId,
             grams: item.grams,
             productName: product?.name ?? 'Nieznany',
@@ -54,22 +57,29 @@ export class MealDetailsComponent {
         })
       )
 
-    ).subscribe(result => {
+    ).subscribe((result) => {
       this.itemsWithDetails = result;
     });
   }
 
-  deleteMeal(id: string | undefined){
-    this.mealService.deleteMeal(id).subscribe({
-    next: (savedMeal) => {
-      console.log("Meal deleted:", savedMeal);
-      alert(`Meal deleted with ID: ${savedMeal.id}`);
+public deleteMeal(id?: string): void {
+  if (!id) {
+    console.error('deleteMeal called without id');
+    
+return;
+  }
+
+  this.mealService.deleteMeal(id).subscribe({
+    next: () => {
+      console.log('Meal deleted');
+      alert('Meal deleted');
     },
     error: (err) => {
-      console.error("Error deleting meal:", err);
-      alert("Failed to delete meal. Check console.");
+      console.error('Error deleting meal:', err);
+      alert('Failed to delete meal. Check console.');
     },
-  });;
-  }
+  });
+}
+
 
 }

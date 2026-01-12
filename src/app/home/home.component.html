@@ -1,1 +1,30 @@
-<p>home works!</p>
+<div class="home-container">
+  @if (stats$ | async; as stats) {
+    
+    <div class="calorie-circle-wrapper">
+      <div class="calorie-ring" [style.background]="getRingGradient(stats.percent, stats.remaining < 0)">
+        <div class="inner-circle">
+          <span class="remaining-value">{{ stats.remaining > 0 ? stats.remaining : 0 }}</span>
+          <span class="remaining-label">Pozostało kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-cards">
+      <div class="card">
+        <p>Cel dzienny</p>
+        <strong>{{ stats.limit }}</strong>
+      </div>
+      <div class="card">
+        <p>Zjedzone</p>
+        <strong>{{ stats.consumed }}</strong>
+      </div>
+    </div>
+    
+  } @else {
+    <div class="login-prompt">
+      <p>Aby zobaczyć swoje statystyki, zaloguj się.</p>
+      <a routerLink="/login" class="login-btn">Przejdź do logowania</a>
+    </div>
+  }
+</div>

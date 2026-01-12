@@ -1,3 +1,6 @@
+$mobile-breakpoint: 768px;
+$small-mobile: 480px;
+
 .not-found-container {
   display: flex;
   flex-direction: column;
@@ -9,22 +12,60 @@
   color: #2e7d32;
   background-color: #e8f5e9;
   padding: 2rem;
+  box-sizing: border-box;
+
+  @media (max-width: $mobile-breakpoint) {
+    padding: 1.5rem;
+    min-height: 70vh;
+  }
+
+  @media (max-width: $small-mobile) {
+    padding: 1rem;
+  }
 
   h1 {
     font-size: 6rem;
     margin: 0;
     color: #1b5e20;
+    line-height: 1;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 4rem;
+    }
+
+    @media (max-width: $small-mobile) {
+      font-size: 3rem;
+    }
   }
 
   h2 {
     font-size: 2rem;
     margin: 0.5rem 0 1rem 0;
+    color: #2e7d32;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: $small-mobile) {
+      font-size: 1.3rem;
+    }
   }
 
   p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     color: #4caf50;
+    max-width: 500px;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+
+    @media (max-width: $small-mobile) {
+      font-size: 0.9rem;
+    }
   }
 
   .btn-home {
@@ -35,6 +76,12 @@
     text-decoration: none;
     font-weight: bold;
     transition: background-color 0.2s;
+    font-size: 1rem;
+
+    @media (max-width: $mobile-breakpoint) {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background-color: #2e7d32;

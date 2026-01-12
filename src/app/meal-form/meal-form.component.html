@@ -39,12 +39,41 @@
 
     <div formArrayName="items">
       @for (item of mealForm.controls.items.controls; track $index) {
+        @let itemIndex = $index;
         <div [formGroupName]="$index" class="ingredient-row">
 
-          <label>
-            Produkt (ID):
-            <input type="number" formControlName="productId" placeholder="ID produktu" />
-          </label>
+        <label>
+          Produkt:
+          <input
+          type="text"
+          formControlName="productName"
+          (input)="onSearch($event.target.value, $index)"
+          placeholder="Wpisz nazwę produktu"
+        />
+        </label>
+
+          @if (filteredProducts[itemIndex]?.length) {
+            <!-- <ul class="autocomplete">
+              @for (product of filteredProducts[itemIndex]; track product.id) {
+                <li (click)="selectProduct(product, itemIndex)">
+                  {{ product.name }}
+                </li>
+              }
+            </ul> -->
+            <ul class="autocomplete">
+                @for (product of filteredProducts[itemIndex]; track product.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="autocomplete-item"
+                      (click)="selectProduct(product, itemIndex)"
+                    >
+                      {{ product.name }}
+                    </button>
+                  </li>
+                }
+              </ul>
+          }
           @if (item.controls.productId.touched && item.controls.productId.errors) {
             @if (item.controls.productId.errors['required']) {
               <small class="error">Wybierz produkt</small>
