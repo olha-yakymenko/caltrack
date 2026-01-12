@@ -1,85 +1,236 @@
-<div class="meal-sort">
-  <span>Sortuj:</span>
-
-  <button type="button" (click)="sortMealsAsc()">Nazwa ↑</button>
-  <button type="button" (click)="sortMealsDesc()">Nazwa ↓</button>
-
-  <button type="button" (click)="sortDateAsc()">Data ↑</button>
-  <button type="button" (click)="sortDateDesc()">Data ↓</button>
-
-  <button type="button" (click)="sortCaloriesAsc()">Kalorie ↑</button>
-  <button type="button" (click)="sortCaloriesDesc()">Kalorie ↓</button>
-</div>
-
-<div class="meal-filters">
-
-  <input
-    type="text"
-    placeholder="Szukaj po nazwie..."
-    (input)="onNameFilterChange($event)"
-  />
-
-  <select (change)="onCaloriesFilterChange($event)">
-    <option value="">Wszystkie kalorie</option>
-    <option value="low">0–500 kcal</option>
-    <option value="medium">501–1000 kcal</option>
-    <option value="high">1000+ kcal</option>
-  </select>
-
-  <label class="checkbox">
-    <input
-      type="checkbox"
-      (change)="onUnderLimitChange($event)"
-    />
-    Tylko poniżej limitu
-  </label>
-
-</div>
-
-
 <div class="meal-list">
-   @for (meal of pagedMeals; track meal.id) {
-    <div class="meal-card">
-      <div><strong>{{ meal.name }}</strong></div>
-      <div>Data: {{ meal.date }}</div>
-      <div>Kalorie: {{ meal.totalCalories }} kcal</div>
-      <div class="meal-actions">
-        <button (click)="deleteMeal(meal.id)">Usuń</button>
-        <a [routerLink]="['/meal', meal.id, 'form']" routerLinkActive="active">Edytuj</a>
-        <a [routerLink]="['/meal', meal.id, 'details']" routerLinkActive="active">Detale</a>
+  <div class="meal-sort">
+    <span>Sortuj według:</span>
+    <button type="button" (click)="sortMealsAsc()">Nazwa A-Z</button>
+    <button type="button" (click)="sortMealsDesc()">Nazwa Z-A</button>
+    <button type="button" (click)="sortDateAsc()">Data rosnąco</button>
+    <button type="button" (click)="sortDateDesc()">Data malejąco</button>
+    <button type="button" (click)="sortCaloriesAsc()">Kalorie rosnąco</button>
+    <button type="button" (click)="sortCaloriesDesc()">Kalorie malejąco</button>
+  </div>
+
+  <div class="meal-filters">
+    <h3>Filtry</h3>
+    
+    <div class="filter-group">
+      <label for="nameFilter">Nazwa posiłku:</label>
+      <input 
+        id="nameFilter"
+        type="text" 
+        placeholder="Wyszukaj po nazwie..." 
+        [value]="nameFilter"
+        (input)="onNameFilterChange($event)"
+      />
+    </div>
+    
+    <div class="filter-group">
+      <label for="caloriesFilter">Poziom kalorii:</label>
+      <select id="caloriesFilter" (change)="onCaloriesFilterChange($event)">
+        <option value="">Wszystkie</option>
+        <option value="low">Niskokaloryczne (&lt; 500 kcal)</option>
+        <option value="medium">Średniokaloryczne (500-1000 kcal)</option>
+        <option value="high">Wysokokaloryczne (&gt; 1000 kcal)</option>
+      </select>
+    </div>
+    
+    <div class="filter-group checkbox">
+      <input 
+        type="checkbox" 
+        id="underLimit" 
+        [checked]="underLimitOnly"
+        (change)="onUnderLimitChange($event)"
+      />
+      <label for="underLimit">Tylko poniżej limitu kalorii</label>
+    </div>
+    
+    <div class="filter-group">
+      <span class="filter-label">Zakres dat:</span>
+      <div class="date-range">
+        <div>
+          <label for="dateFrom">Od:</label>
+          <input 
+            id="dateFrom"
+            type="date" 
+            [value]="dateRange.from"
+            (change)="onDateFromChange($event)"
+          />
+        </div>
+        <div>
+          <label for="dateTo">Do:</label>
+          <input 
+            id="dateTo"
+            type="date" 
+            [value]="dateRange.to"
+            (change)="onDateToChange($event)"
+          />
+        </div>
       </div>
     </div>
-  }
-</div>
+    
+    <div class="filter-group">
+      <span class="filter-label">Typ posiłku:</span>
+      <div class="radio-group">
+        <div>
+          <input 
+            type="radio" 
+            id="mealTypeAll"
+            name="mealType" 
+            value="" 
+            [checked]="!mealType"
+            (change)="onMealTypeChange($event)"
+          />
+          <label for="mealTypeAll">Wszystkie</label>
+        </div>
+        <div>
+          <input 
+            type="radio" 
+            id="mealTypeBreakfast"
+            name="mealType" 
+            value="breakfast" 
+            [checked]="mealType === 'breakfast'"
+            (change)="onMealTypeChange($event)"
+          />
+          <label for="mealTypeBreakfast">Śniadanie</label>
+        </div>
+        <div>
+          <input 
+            type="radio" 
+            id="mealTypeLunch"
+            name="mealType" 
+            value="lunch" 
+            [checked]="mealType === 'lunch'"
+            (change)="onMealTypeChange($event)"
+          />
+          <label for="mealTypeLunch">Obiad</label>
+        </div>
+        <div>
+          <input 
+            type="radio" 
+            id="mealTypeDinner"
+            name="mealType" 
+            value="dinner" 
+            [checked]="mealType === 'dinner'"
+            (change)="onMealTypeChange($event)"
+          />
+          <label for="mealTypeDinner">Kolacja</label>
+        </div>
+        <div>
+          <input 
+            type="radio" 
+            id="mealTypeSnack"
+            name="mealType" 
+            value="snack" 
+            [checked]="mealType === 'snack'"
+            (change)="onMealTypeChange($event)"
+          />
+          <label for="mealTypeSnack">Przekąska</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="filter-group">
+      <span class="filter-label">Zawiera produkty:</span>
+      <div class="multi-select">
+        @for (product of availableProducts; track product.id) {
+          <div class="multi-select-item">
+            <input 
+              type="checkbox" 
+              [id]="'product' + product.id"
+              [value]="product.id"
+              [checked]="selectedProducts.includes(product.id)"
+              (change)="onProductSelect(product.id, $event)"
+            />
+            <label [for]="'product' + product.id">{{ product.name }}</label>
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="filter-group">
+      <span class="filter-label">Zakres gramów składnika:</span>
+      <div class="range-inputs">
+        <div>
+          <label for="gramsMin">Min:</label>
+          <input 
+            id="gramsMin"
+            type="number" 
+            [value]="gramsRange.min"
+            (change)="onGramsMinChange($event)"
+            min="0"
+            max="2000"
+          />
+        </div>
+        <div>
+          <label for="gramsMax">Max:</label>
+          <input 
+            id="gramsMax"
+            type="number" 
+            [value]="gramsRange.max"
+            (change)="onGramsMaxChange($event)"
+            min="0"
+            max="2000"
+          />
+        </div>
+      </div>
+      <div class="range-values">
+        {{ gramsRange.min }}g - {{ gramsRange.max }}g
+      </div>
+    </div>
+    
+    <div class="filter-group toggle">
+      <div class="toggle-switch">
+        <input 
+          type="checkbox" 
+          id="hasImage"
+          [checked]="hasImage"
+          (change)="onHasImageChange($event)"
+        />
+        <label for="hasImage">
+          <span class="toggle-slider"></span>
+          Tylko z obrazkiem
+        </label>
+      </div>
+    </div>
+    
+    <button type="button" class="clear-filters-btn" (click)="clearFilters()">
+      Wyczyść wszystkie filtry
+    </button>
+  </div>
 
-<div class="pagination">
+  <div class="pagination">
+    <button type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+    <span>Strona {{ currentPage }} z {{ totalPages }}</span>
+    <button type="button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+    
+    <select (change)="changePageSize($event)">
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size" [selected]="size === pageSize">{{ size }} na stronę</option>
+      }
+    </select>
+  </div>
 
-  <button
-    type="button"
-    (click)="goToPage(currentPage - 1)"
-    [disabled]="currentPage === 1"
-  >
-    ◀
-  </button>
-
-  <span>
-    Strona {{ currentPage }} / {{ totalPages }}
-  </span>
-
-  <button
-    type="button"
-    (click)="goToPage(currentPage + 1)"
-    [disabled]="currentPage === totalPages"
-  >
-    ▶
-  </button>
-
-  <select (change)="changePageSize($event)">
-    @for (size of pageSizeOptions; track size) {
-      <option [value]="size" [selected]="size === pageSize">
-        {{ size }}
-      </option>
+  <div class="meal-cards">
+    @for (meal of pagedMeals; track meal.id) {
+      <div class="meal-card">
+        <div class="meal-id">ID: {{ meal.id }}</div>
+        <div class="meal-name">{{ meal.name }}</div>
+        <div class="meal-date">{{ meal.date }}</div>
+        <div class="meal-calories">{{ meal.totalCalories }} kcal</div>
+        
+        <div class="meal-actions">
+          <a [routerLink]="['/meal', meal.id, 'details']" class="btn-details">Szczegóły</a>
+          <a [routerLink]="['/meal', meal.id, 'form']" class="btn-edit">Edytuj</a>
+          <button type="button" (click)="deleteMeal(meal.id)" class="btn-delete">Usuń</button>
+        </div>
+      </div>
+    } @empty {
+      <p class="no-meals">Brak posiłków spełniających kryteria wyszukiwania.</p>
     }
-  </select>
+  </div>
 
+  <div class="pagination">
+    <button type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+    <span>Strona {{ currentPage }} z {{ totalPages }}</span>
+    <button type="button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+  </div>
 </div>

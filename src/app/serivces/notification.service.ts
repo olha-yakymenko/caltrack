@@ -20,7 +20,7 @@ export class NotificationService {
   
   private nextId = 0;
 
-  show(message: string, type: NotificationType = 'info', duration: number = 3000): void {
+  public show(message: string, type: NotificationType = 'info', duration: number = 3000): void {
     const id = ++this.nextId;
     const notification: Notification = {
       id,
@@ -38,28 +38,28 @@ export class NotificationService {
     }
   }
 
-  success(message: string, duration: number = 3000): void {
+  public success(message: string, duration: number = 3000): void {
     this.show(message, 'success', duration);
   }
 
-  error(message: string, duration: number = 5000): void {
+  public error(message: string, duration: number = 5000): void {
     this.show(message, 'error', duration);
   }
 
-  info(message: string, duration: number = 3000): void {
+  public info(message: string, duration: number = 3000): void {
     this.show(message, 'info', duration);
   }
 
-  warning(message: string, duration: number = 4000): void {
+  public warning(message: string, duration: number = 4000): void {
     this.show(message, 'warning', duration);
   }
 
-  remove(id: number): void {
+  public remove(id: number): void {
     const current = this.notificationsSubject.value;
-    this.notificationsSubject.next(current.filter(notification => notification.id !== id));
+    this.notificationsSubject.next(current.filter((notification) => notification.id !== id));
   }
 
-  clear(): void {
+  public clear(): void {
     this.notificationsSubject.next([]);
   }
 }

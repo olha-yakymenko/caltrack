@@ -11,7 +11,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let message = 'Wystąpił nieznany błąd';
-      let notificationType: 'error' | 'warning' = 'error';
+      const notificationType: 'error' | 'warning' = 'error';
 
       switch (error.status) {
         case 400:
@@ -35,10 +35,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           message = 'Zasób nie istnieje';
           break;
 
-        case 409:
-          message = 'Nie można usunąć – element jest powiązany z innymi danymi';
-          notificationType = 'warning';
-          break;
+        // case 409:
+        //   message = 'Nie można usunąć – element jest powiązany z innymi danymi';
+        //   notificationType = 'warning';
+        //   break;
 
         case 500:
           message = 'Błąd serwera';

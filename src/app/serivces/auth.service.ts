@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { User } from '../interfaces/user';
+import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,6 +11,8 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  private notificationService = inject(NotificationService);
+  
   private http = inject(HttpClient);
 
   public constructor() {
@@ -58,5 +61,25 @@ return user;
     const user = this.currentUserSubject.value;
     
     return !!user && user.role === role && user.isActive;
+  }
+
+  updateUserProfile(userData: { name: string; email: string }): Observable<User> {
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser) {
+      throw new Error('Nie znaleziono zalogowanego użytkownika');
+    }
+
+    const updatedUser = {
+      ...currentUser,
+      name: userData.name,
+      email: userData.email
+    };
+
+    return this.http.put<User>(`http://localhost:3000/users/${currentUser.id}`, updatedUser).pipe(
+      tap((user) => {
+        this.currentUserSubject.next(user);
+        this.notificationService.success('Dane użytkownika zostały zaktualizowane');
+      })
+    );
   }
 }

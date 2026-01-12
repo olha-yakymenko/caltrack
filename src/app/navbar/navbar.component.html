@@ -11,11 +11,30 @@
       @if (user.role === 'admin') {
         <a routerLink="/admin">Panel Admina</a>
       }
+      <button 
+        class="settings-btn"
+        (click)="openSettings()"
+        aria-label="Ustawienia użytkownika"
+        title="Edytuj dane użytkownika"
+      >
+        ⚙️
+      </button>
 
         <button (click)="authService.logout()">Wyloguj</button>
     } @else {
       <a routerLink="/login">Zaloguj się</a>
     }
 </nav>
+
+@if (showSettings && userSettings.name && userSettings.email) {
+  <app-user-settings
+    [name]="userSettings.name"
+    [email]="userSettings.email"
+    (save)="saveUserSettings($event)"
+    (cancel)="closeSettings()"
+  ></app-user-settings>
+}
+
 <hr>
 <router-outlet></router-outlet>
+

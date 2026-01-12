@@ -1,1 +1,23 @@
-<p>notification-toast works!</p>
+<div class="notification-container">
+  @for (notification of notifications$ | async; track notification.id) {
+    <div 
+      class="notification {{ notification.type }}"
+      (click)="removeNotification(notification.id)"
+      (keydown)="handleNotificationKeydown($event, notification.id)"
+      tabindex="0"
+      role="button"
+      aria-label="Kliknij aby zamknąć powiadomienie: {{ notification.message }}"
+    >
+      <span class="notification-icon">{{ getIcon(notification.type) }}</span>
+      <span class="notification-message">{{ notification.message }}</span>
+      <button 
+        class="notification-close" 
+        (click)="removeNotification(notification.id); $event.stopPropagation()"
+        (keydown)="handleCloseKeydown($event, notification.id)"
+        aria-label="Zamknij powiadomienie"
+      >
+        ×
+      </button>
+    </div>
+  }
+</div>
