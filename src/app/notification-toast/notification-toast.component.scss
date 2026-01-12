@@ -1,0 +1,103 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  width: 100%;
+}
+
+.notification {
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  animation: slideIn 0.3s ease-out;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.notification-icon {
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  flex: 1;
+  word-break: break-word;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.success {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+}
+
+.error {
+  background: linear-gradient(135deg, #f44336, #c62828);
+}
+
+.info {
+  background: linear-gradient(135deg, #2196f3, #1565c0);
+}
+
+.warning {
+  background: linear-gradient(135deg, #ff9800, #ef6c00);
+  color: #fff;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .notification {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .notification-icon {
+    font-size: 16px;
+  }
+  
+  .notification-close {
+    font-size: 20px;
+  }
+}

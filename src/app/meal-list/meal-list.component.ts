@@ -10,7 +10,6 @@ import { MealService } from '../serivces/meal.service';
   styleUrl: './meal-list.component.scss',
 })
 export class MealListComponent implements OnInit {
-  // ===== pola komponentu =====
   public meals: Meal[] = [];
   public filteredMeals: Meal[] = [];
   public pagedMeals: Meal[] = [];
@@ -35,23 +34,12 @@ export class MealListComponent implements OnInit {
   }
 
   public deleteMeal(id?: string): void {
-  if (!id) return;
+    if (!id) return;
 
-  this.mealService.deleteMeal(id).subscribe({
-    next: () => {
-      console.log('Meal deleted');
-      alert('Meal deleted');
-      this.applyFilters();
-    },
-    error: (err) => {
-      console.error('Error deleting meal:', err);
-      alert('Failed to delete meal. Check console.');
-    },
-  });
-}
+    this.mealService.deleteMeal(id).subscribe();
+    this.applyFilters();
+  }
 
-
-  // ===== sortowanie =====
   public sortMealsAsc(): void {
     this.filteredMeals.sort((a, b) => a.name.localeCompare(b.name));
     this.applyPagination();
@@ -90,7 +78,6 @@ export class MealListComponent implements OnInit {
     this.applyPagination();
   }
 
-  // ===== filtrowanie =====
   public onNameFilterChange(event: Event): void {
     this.nameFilter = (event.target as HTMLInputElement).value.toLowerCase();
     this.applyFilters();
@@ -107,39 +94,37 @@ export class MealListComponent implements OnInit {
     this.applyFilters();
   }
 
-public applyFilters(): void {
-  this.filteredMeals = this.meals.filter((meal) => 
-    this.passesNameFilter(meal) &&
-    this.passesCaloriesFilter(meal)
-  );
+  public applyFilters(): void {
+    this.filteredMeals = this.meals.filter((meal) => 
+      this.passesNameFilter(meal) &&
+      this.passesCaloriesFilter(meal)
+    );
 
-  this.currentPage = 1;
-  this.applyPagination();
-}
-
-private passesNameFilter(meal: Meal): boolean {
-  if (!this.nameFilter) return true;
-  
-return meal.name.toLowerCase().includes(this.nameFilter);
-}
-
-private passesCaloriesFilter(meal: Meal): boolean {
-  if (!this.caloriesFilter) return true;
-  const kcal = meal.totalCalories ?? 0;
-
-  switch (this.caloriesFilter) {
-    case 'low':
-      return kcal <= 500;
-    case 'medium':
-      return kcal > 500 && kcal <= 1000;
-    case 'high':
-      return kcal > 1000;
-    default:
-      return true;
+    this.currentPage = 1;
+    this.applyPagination();
   }
-}
 
-  // ===== paginacja =====
+  private passesNameFilter(meal: Meal): boolean {
+    if (!this.nameFilter) return true;
+    return meal.name.toLowerCase().includes(this.nameFilter);
+  }
+
+  private passesCaloriesFilter(meal: Meal): boolean {
+    if (!this.caloriesFilter) return true;
+    const kcal = meal.totalCalories ?? 0;
+
+    switch (this.caloriesFilter) {
+      case 'low':
+        return kcal <= 500;
+      case 'medium':
+        return kcal > 500 && kcal <= 1000;
+      case 'high':
+        return kcal > 1000;
+      default:
+        return true;
+    }
+  }
+
   public applyPagination(): void {
     this.totalPages = Math.ceil(this.filteredMeals.length / this.pageSize);
     const startIndex = (this.currentPage - 1) * this.pageSize;

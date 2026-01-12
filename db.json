@@ -39,11 +39,12 @@
     {
       "id": "ec65",
       "userId": 1,
-      "name": "hjvbkj",
+      "name": "hjvbkja",
       "date": "2025-12-21T20:08",
       "items": [
         {
           "productId": "1",
+          "productName": "Ryż",
           "grams": 10
         }
       ],
@@ -74,19 +75,6 @@
         }
       ],
       "totalCalories": 330
-    },
-    {
-      "id": "0572",
-      "userId": 1,
-      "name": "kjkjbk",
-      "date": "2025-12-20T12:30",
-      "items": [
-        {
-          "productId": "1",
-          "grams": 200
-        }
-      ],
-      "totalCalories": 260
     },
     {
       "id": "2373",
