@@ -3,6 +3,10 @@ import { InfoComponent } from './info/info.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { authGuard } from './guard/auth.guard';
+import { roleGuard } from './guard/role.guard'; 
+
 export const routes: Routes = [
   {
     path: '',
@@ -24,6 +28,12 @@ export const routes: Routes = [
     {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'admin',
+    component: AdminUsersComponent,
+    canActivate: [authGuard, roleGuard], 
+    data: { roles: ['admin'] } 
   },
   {
     path: '**',

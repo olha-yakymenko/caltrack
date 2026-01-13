@@ -1,45 +1,75 @@
-<div class="dialog-overlay" (click)="onCancel()">
-      <div class="dialog-content" (click)="$event.stopPropagation()">
-        <h2>Edytuj dane użytkownika</h2>
-        
-        <form [formGroup]="settingsForm" class="settings-form">
-          <div class="form-group">
-            <label for="name">Imię i nazwisko:</label>
-            <input 
-              id="name"
-              type="text" 
-              formControlName="name" 
-              placeholder="Wprowadź imię i nazwisko"
-            />
-            @if (settingsForm.controls.name.invalid && settingsForm.controls.name.touched) {
-              <small class="error">Wprowadź imię i nazwisko oddzielone spacją (np. Jan Kowalski)</small>
-            }
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input 
-              id="email"
-              type="email" 
-              formControlName="email" 
-              placeholder="Wprowadź email"
-            />
-            @if (settingsForm.controls.email.invalid && settingsForm.controls.email.touched) {
-              <small class="error">Wprowadź poprawny adres email</small>
-            }
-          </div>
-
-          <div class="dialog-actions">
-            <button type="button" class="btn-cancel" (click)="onCancel()">Anuluj</button>
-            <button 
-              type="button" 
-              class="btn-save" 
-              (click)="onSave()"
-              [disabled]="settingsForm.invalid"
-            >
-              Zapisz zmiany
-            </button>
-          </div>
-        </form>
+<div 
+  class="dialog-overlay" 
+  (click)="onCancel()"
+  (keydown.enter)="onCancel()"
+  (keydown.space)="onCancel(); $event.preventDefault()"
+  tabindex="0"
+  role="button"
+  aria-label="Kliknij w tło aby zamknąć dialog"
+  (keydown)="onOverlayKeydown($event)"
+>
+<div 
+  class="dialog-overlay" 
+  (click)="onCancel()"
+  (keydown.enter)="onCancel()"
+  (keydown.space)="onCancel(); $event.preventDefault()"
+  tabindex="0"
+  role="button"
+  aria-label="Kliknij w tło aby zamknąć dialog"
+  (keydown)="onOverlayKeydown($event)"
+>
+    <h2 id="dialog-title">Edytuj dane użytkownika</h2>
+    
+    <form [formGroup]="settingsForm" class="settings-form" (keydown.escape)="onCancel()">
+      <div class="form-group">
+        <label for="name">Imię i nazwisko:</label>
+        <input 
+          id="name"
+          type="text" 
+          formControlName="name" 
+          placeholder="Wprowadź imię i nazwisko"
+          (keydown.escape)="onCancel()"
+        />
+        @if (settingsForm.controls.name.invalid && settingsForm.controls.name.touched) {
+          <small class="error">Wprowadź imię i nazwisko oddzielone spacją (np. Jan Kowalski)</small>
+        }
       </div>
-    </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input 
+          id="email"
+          type="email" 
+          formControlName="email" 
+          placeholder="Wprowadź email"
+          (keydown.escape)="onCancel()"
+        />
+        @if (settingsForm.controls.email.invalid && settingsForm.controls.email.touched) {
+          <small class="error">Wprowadź poprawny adres email</small>
+        }
+      </div>
+
+      <div class="dialog-actions">
+        <button 
+          type="button" 
+          class="btn-cancel" 
+          (click)="onCancel()"
+          (keydown.enter)="onCancel()"
+          (keydown.space)="onCancel(); $event.preventDefault()"
+        >
+          Anuluj
+        </button>
+        <button 
+          type="button" 
+          class="btn-save" 
+          (click)="onSave()"
+          (keydown.enter)="onSave()"
+          (keydown.space)="onSave(); $event.preventDefault()"
+          [disabled]="settingsForm.invalid"
+        >
+          Zapisz zmiany
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

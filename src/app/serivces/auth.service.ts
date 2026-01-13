@@ -63,7 +63,7 @@ return user;
     return !!user && user.role === role && user.isActive;
   }
 
-  updateUserProfile(userData: { name: string; email: string }): Observable<User> {
+  public updateUserProfile(userData: { name: string; email: string }): Observable<User> {
     const currentUser = this.currentUserSubject.value;
     if (!currentUser) {
       throw new Error('Nie znaleziono zalogowanego użytkownika');

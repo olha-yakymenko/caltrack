@@ -3,6 +3,10 @@ import { RouterModule } from '@angular/router';
 import { Meal } from '../interfaces/meal';
 import { MealService } from '../serivces/meal.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive';
+import { Product } from '../interfaces/product';
+import { NotificationService } from '../serivces/notification.service';
+import { AuthService } from '../serivces/auth.service';
 
 interface ExtendedMeal extends Meal {
   imageUrl?: string;
@@ -13,7 +17,7 @@ type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | '';
 
 @Component({
   selector: 'app-meal-list',
-  imports: [RouterModule, ReactiveFormsModule],
+  imports: [RouterModule, ReactiveFormsModule, DisabledIfInactiveDirective],
   templateUrl: './meal-list.component.html',
   styleUrl: './meal-list.component.scss',
 })
@@ -41,6 +45,8 @@ export class MealListComponent implements OnInit {
     max: 2000
   };
   public hasImage = false;
+  public isLoadingProducts = false; 
+  public currentUserId: string = '';
 
   public filterForm = new FormGroup({
     name: new FormControl(''),
@@ -51,22 +57,56 @@ export class MealListComponent implements OnInit {
     hasImage: new FormControl(false)
   });
 
-  public availableProducts = [
-    { id: '1', name: 'Jabłko' },
-    { id: '2', name: 'Kurczak' },
-    { id: '3', name: 'Ryż' },
-    { id: '4', name: 'Brokuł' },
-    { id: '5', name: 'Jajko' }
-  ];
 
+  public availableProducts: Product[] = [];
+  
   protected mealService = inject(MealService);
+  private notificationService = inject(NotificationService); 
+  private authService = inject(AuthService);
 
-  public ngOnInit(): void {
-    this.mealService.getMeals().subscribe((res: Meal[]) => {
-      this.meals = res;
-      this.filteredMeals = [...res];
-      this.applyPagination();
-      this.calculateGramsRange();
+  public ngOnInit(): void {    
+    
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.currentUserId = currentUser.id;
+      console.log('Current user ID for meals:', this.currentUserId);
+    } else {
+      this.notificationService.error('Musisz być zalogowany, aby zobaczyć posiłki');
+      
+return;
+    }
+    
+    this.loadProducts();
+    this.loadMeals(); 
+  }
+
+  private loadProducts(): void {
+    this.isLoadingProducts = true;
+    this.mealService.getProducts().subscribe({
+      next: (products: Product[]) => {
+        this.availableProducts = products;
+        this.isLoadingProducts = false;
+      },
+      error: (err) => {
+        console.error('Błąd ładowania produktów:', err);
+        this.notificationService.error('Nie udało się załadować listy produktów');
+        this.isLoadingProducts = false;
+      }
+    });
+  }
+
+  private loadMeals(): void {
+    this.mealService.getMeals().subscribe({
+      next: (res: Meal[]) => {
+        this.meals = res.filter((meal) => meal.userId === this.currentUserId);
+        this.filteredMeals = [...this.meals];
+        this.applyPagination();
+        this.calculateGramsRange();
+      },
+      error: (err) => {
+        console.error('Błąd ładowania posiłków:', err);
+        this.notificationService.error('Nie udało się załadować listy posiłków');
+      }
     });
     
     this.filterForm.valueChanges.subscribe(() => {
@@ -112,6 +152,10 @@ export class MealListComponent implements OnInit {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
     this.applyPagination();
+  }
+
+  public toString(value: unknown): string {
+    return String(value);
   }
 
   public sortDateDesc(): void {

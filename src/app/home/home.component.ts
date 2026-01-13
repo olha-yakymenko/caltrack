@@ -26,7 +26,7 @@ export class HomeComponent {
       const today = new Date().toISOString().split('T')[0]; // Pobiera format YYYY-MM-DD
       
       const todaysMeals = meals.filter((meal) => 
-        meal.userId === Number(user.id) && 
+        meal.userId === user.id && 
         meal.date.startsWith(today)
       );
 

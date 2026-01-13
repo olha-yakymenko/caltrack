@@ -1,59 +1,56 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { AsyncPipe, Location, CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { UserSettingsComponent } from '../user-settings/user-settings.component';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; // Dodaj import
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../serivces/auth.service';
-import { UserSettingsComponent } from "../user-settings/user-settings.component";
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   imports: [
-    RouterOutlet,
-    RouterModule,
-    AsyncPipe,
-    RouterLink,
-    CommonModule,
-    UserSettingsComponent
-],
+    RouterModule, 
+    CommonModule, 
+    UserSettingsComponent,
+    DisabledIfInactiveDirective 
+  ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
+  styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+  public showSettings = false;
+  public userSettings = { name: '', email: '' };
+
   protected authService = inject(AuthService);
-  protected location = inject(Location); 
+  private router = inject(Router);
 
-  showSettings = false;
-  userSettings = { name: '', email: '' };
-
-  public back(): void {
-    this.location.back();
-  }
-
-  openSettings(): void {
-    console.log('openSettings clicked'); 
+  public openSettings(): void {
     const user = this.authService.getCurrentUser();
-    console.log('Current user:', user); 
-    if (user) {
+    if (user && user.isActive) { 
       this.userSettings = { name: user.name, email: user.email };
       this.showSettings = true;
-      console.log('showSettings set to true'); 
     }
   }
 
-  closeSettings(): void {
+  public closeSettings(): void {
     this.showSettings = false;
-    console.log('showSettings set to false'); 
   }
 
-  saveUserSettings(settings: { name: string; email: string }): void {
-    console.log('Saving user settings:', settings); // Debug
-    this.authService.updateUserProfile(settings).subscribe({
-      next: () => {
-        console.log('Settings saved successfully');
-        this.closeSettings();
-      },
-      error: (err) => {
-        console.error('Błąd aktualizacji:', err);
-      }
-    });
+  public saveUserSettings(data: { name: string; email: string }): void {
+    const user = this.authService.getCurrentUser();
+    if (user && user.isActive) { 
+      this.authService.updateUserProfile(data).subscribe({
+        next: () => {
+          this.closeSettings();
+        },
+        error: (err) => {
+          console.error('Błąd aktualizacji użytkownika:', err);
+        }
+      });
+    }
+  }
+
+  public back(): void {
+    void this.router.navigate(['..']);
   }
 }

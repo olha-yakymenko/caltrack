@@ -1,26 +1,58 @@
 <nav>
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/info" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Info</a>
-    <a routerLink="/meal/list" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista posiłków</a>
-    <a routerLink="/meal/form" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj posiłek</a>
-    <button (click)="back()">Cofnij</button>
+    <a routerLink="/" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{ exact: true }"
+       [appDisabledIfInactive]="true">  
+      Home
+    </a>
+    
+    <a routerLink="/info" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{ exact: true }"
+       [appDisabledIfInactive]="true">  
+      Info
+    </a>
+    
+    <a routerLink="/meal/list" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{ exact: true }"
+       [appDisabledIfInactive]="true">  
+      Lista posiłków
+    </a>
+    
+    <a routerLink="/meal/form" 
+       routerLinkActive="active" 
+       [routerLinkActiveOptions]="{ exact: true }"
+       [appDisabledIfInactive]="true">  
+      Dodaj posiłek
+    </a>
+    
+    <button (click)="back()">  
+      Cofnij
+    </button>
 
     @if (authService.currentUser$ | async; as user) {
       <div>Witaj, <strong>{{ user.name }}</strong> ({{ user.email }})</div>
       
       @if (user.role === 'admin') {
-        <a routerLink="/admin">Panel Admina</a>
+        <a routerLink="/admin" [appDisabledIfInactive]="true">  
+          Panel Admina
+        </a>
       }
+      
       <button 
         class="settings-btn"
         (click)="openSettings()"
         aria-label="Ustawienia użytkownika"
         title="Edytuj dane użytkownika"
+        [appDisabledIfInactive]="true"  
       >
         ⚙️
       </button>
 
-        <button (click)="authService.logout()">Wyloguj</button>
+      <button (click)="authService.logout()" >  
+        Wyloguj
+      </button>
     } @else {
       <a routerLink="/login">Zaloguj się</a>
     }
@@ -37,4 +69,3 @@
 
 <hr>
 <router-outlet></router-outlet>
-

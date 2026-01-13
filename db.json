@@ -14,7 +14,7 @@
   "meals": [
     {
       "id": "1",
-      "userId": 1,
+      "userId": "1",
       "name": "Obiad12345",
       "date": "2025-12-20T12:30",
       "items": [
@@ -38,7 +38,7 @@
     },
     {
       "id": "ec65",
-      "userId": 1,
+      "userId": "1",
       "name": "hjvbkja",
       "date": "2025-12-21T20:08",
       "items": [
@@ -52,7 +52,7 @@
     },
     {
       "id": "b5ee",
-      "userId": 1,
+      "userId": "1",
       "name": "sdesd",
       "date": "2025-12-20T12:30",
       "items": [
@@ -65,7 +65,7 @@
     },
     {
       "id": "22f8",
-      "userId": 1,
+      "userId": "1",
       "name": "111",
       "date": "2025-12-20T12:30",
       "items": [
@@ -78,7 +78,7 @@
     },
     {
       "id": "2373",
-      "userId": 1,
+      "userId": "1",
       "name": "efad",
       "date": "2025-12-27T22:39",
       "items": [
@@ -91,7 +91,7 @@
     },
     {
       "id": "4b68",
-      "userId": 1,
+      "userId": "1",
       "name": "sdfmvc",
       "date": "2026-01-11T16:03",
       "items": [
@@ -104,7 +104,7 @@
     },
     {
       "id": "deb4",
-      "userId": 1,
+      "userId": "1",
       "name": "sdfv",
       "date": "2026-01-11T16:03",
       "items": [
@@ -117,7 +117,7 @@
     },
     {
       "id": "b61f",
-      "userId": 1,
+      "userId": "1",
       "name": "fdsvs",
       "date": "2026-01-11T21:12",
       "items": [
@@ -127,6 +127,20 @@
         }
       ],
       "totalCalories": 13
+    },
+    {
+      "id": "6bdf",
+      "userId": "2",
+      "name": "aaa",
+      "date": "2026-01-13T01:45",
+      "items": [
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 1000
+        }
+      ],
+      "totalCalories": 1650
     }
   ],
   "users": [

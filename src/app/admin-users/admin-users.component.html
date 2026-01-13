@@ -1,0 +1,102 @@
+<div class="admin-users-container">
+      <h2>Zarządzanie użytkownikami</h2>
+      
+      <div class="search-bar">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm"
+          placeholder="Szukaj użytkownika..."
+          (ngModelChange)="filterUsers()"
+        />
+        <button (click)="refreshUsers()" class="btn-refresh">
+          🔄 Odśwież
+        </button>
+      </div>
+
+      <div class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th (click)="sortBy('id')" class="sortable">
+                ID 
+                @if (sortField === 'id') {
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
+              <th (click)="sortBy('name')" class="sortable">
+                Imię i nazwisko
+                @if (sortField === 'name') {
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
+              <th (click)="sortBy('email')" class="sortable">
+                Email
+                @if (sortField === 'email') {
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
+              <th (click)="sortBy('role')" class="sortable">
+                Rola
+                @if (sortField === 'role') {
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
+              <th (click)="sortBy('isActive')" class="sortable">
+                Status
+                @if (sortField === 'isActive') {
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
+              <th>Limit kalorii</th>
+              <th>Akcje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of filteredUsers; track user.id) {
+              <tr [class.inactive]="!user.isActive">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <span [class]="'role-badge ' + user.role">
+                    {{ user.role === 'admin' ? 'Administrator' : 'Użytkownik' }}
+                  </span>
+                </td>
+                <td>
+                  <span [class]="user.isActive ? 'status-active' : 'status-inactive'">
+                    {{ user.isActive ? 'Aktywny' : 'Zawieszony' }}
+                  </span>
+                </td>
+                <td>{{ user.dailyCalorieLimit }} kcal</td>
+                <td class="actions">
+                  <button 
+                    (click)="toggleUserStatus(user)"
+                    [class]="user.isActive ? 'btn-suspend' : 'btn-activate'"
+                    [disabled]="isCurrentUser(user)"
+                  >
+                    {{ user.isActive ? 'Zawieś' : 'Aktywuj' }}
+                  </button>
+                  @if (isCurrentUser(user)) {
+                    <span class="current-user-hint">(Ty)</span>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="no-data">Brak użytkowników do wyświetlenia</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <h3>Statystyki</h3>
+          <p>Łącznie użytkowników: {{ users.length }}</p>
+          <p>Aktywnych: {{ activeUsersCount }}</p>
+          <p>Zawieszonych: {{ suspendedUsersCount }}</p>
+          <p>Adminów: {{ adminUsersCount }}</p>
+        </div>
+      </div>
+    </div>

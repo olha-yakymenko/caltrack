@@ -10,24 +10,24 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent implements OnInit {
-  @Output() save = new EventEmitter<{ name: string; email: string }>();
-  @Output() cancel = new EventEmitter<void>();
-  @Input() name = '';
-  @Input() email = '';
+  @Output() public save = new EventEmitter<{ name: string; email: string }>();
+  @Output() public closed = new EventEmitter<void>(); // ZMIANA: cancel → closed
+  @Input() public name = '';
+  @Input() public email = '';
 
-  settingsForm = new FormGroup({
+  public settingsForm = new FormGroup({
     name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.pattern(/^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s]{2,}\s+[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s]{2,}$/)
+      Validators.required.bind(null),
+      Validators.minLength.bind(null, 3),
+      Validators.pattern.bind(null, /^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s]{2,}\s+[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s]{2,}$/)
     ]),
     email: new FormControl('', [
-      Validators.required,
-      Validators.email
+      Validators.required.bind(null),
+      Validators.email.bind(null)
     ])
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.name && this.email) {
       this.settingsForm.patchValue({
         name: this.name,
@@ -36,13 +36,19 @@ export class UserSettingsComponent implements OnInit {
     }
   }
 
-  onSave(): void {
-    if (this.settingsForm.valid) {
-      this.save.emit(this.settingsForm.value as { name: string; email: string });
+  public onOverlayKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.onCancel();
     }
   }
 
-  onCancel(): void {
-    this.cancel.emit();
-  }
+  public onSave = (): void => {
+    if (this.settingsForm.valid) {
+      this.save.emit(this.settingsForm.value as { name: string; email: string });
+    }
+  };
+
+  public onCancel = (): void => {
+    this.closed.emit(); 
+  };
 }

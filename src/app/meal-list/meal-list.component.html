@@ -129,22 +129,22 @@
     </div>
     
     <div class="filter-group">
-      <span class="filter-label">Zawiera produkty:</span>
-      <div class="multi-select">
-        @for (product of availableProducts; track product.id) {
-          <div class="multi-select-item">
-            <input 
-              type="checkbox" 
-              [id]="'product' + product.id"
-              [value]="product.id"
-              [checked]="selectedProducts.includes(product.id)"
-              (change)="onProductSelect(product.id, $event)"
-            />
-            <label [for]="'product' + product.id">{{ product.name }}</label>
-          </div>
-        }
+  <span class="filter-label">Zawiera produkty:</span>
+  <div class="multi-select">
+    @for (product of availableProducts; track product.id) {
+      <div class="multi-select-item">
+        <input 
+          type="checkbox" 
+          [id]="'product' + product.id"
+          [value]="product.id"
+          [checked]="selectedProducts.includes(toString(product.id))"
+          (change)="onProductSelect(toString(product.id), $event)"
+        />
+        <label [for]="'product' + product.id">{{ product.name }}</label>
       </div>
-    </div>
+    }
+  </div>
+</div>
     
     <div class="filter-group">
       <span class="filter-label">Zakres gramów składnika:</span>
@@ -218,9 +218,9 @@
         <div class="meal-calories">{{ meal.totalCalories }} kcal</div>
         
         <div class="meal-actions">
-          <a [routerLink]="['/meal', meal.id, 'details']" class="btn-details">Szczegóły</a>
-          <a [routerLink]="['/meal', meal.id, 'form']" class="btn-edit">Edytuj</a>
-          <button type="button" (click)="deleteMeal(meal.id)" class="btn-delete">Usuń</button>
+          <a [routerLink]="['/meal', meal.id, 'details']" class="btn-details" [appDisabledIfInactive]="true">Szczegóły</a>
+          <a [routerLink]="['/meal', meal.id, 'form']" class="btn-edit" [appDisabledIfInactive]="true">Edytuj</a>
+          <button type="button" (click)="deleteMeal(meal.id)" class="btn-delete" [appDisabledIfInactive]="true">Usuń</button>
         </div>
       </div>
     } @empty {
