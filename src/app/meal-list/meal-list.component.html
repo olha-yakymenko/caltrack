@@ -177,20 +177,6 @@
       </div>
     </div>
     
-    <div class="filter-group toggle">
-      <div class="toggle-switch">
-        <input 
-          type="checkbox" 
-          id="hasImage"
-          [checked]="hasImage"
-          (change)="onHasImageChange($event)"
-        />
-        <label for="hasImage">
-          <span class="toggle-slider"></span>
-          Tylko z obrazkiem
-        </label>
-      </div>
-    </div>
     
     <button type="button" class="clear-filters-btn" (click)="clearFilters()">
       Wyczyść wszystkie filtry
