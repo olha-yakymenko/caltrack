@@ -4,15 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../serivces/auth.service';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  isActive: boolean;
-  dailyCalorieLimit: number;
-}
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-admin-users',
@@ -73,22 +65,37 @@ export class AdminUsersComponent implements OnInit {
   }
 
   private sortUsers(): void {
+    const direction = this.sortDirection === 'asc' ? 1 : -1;
+
     this.filteredUsers.sort((a, b) => {
-      let aValue = a[this.sortField];
-      let bValue = b[this.sortField];
-      
-      // Dla boolean sortujemy true przed false
-      if (typeof aValue === 'boolean') {
-        aValue = aValue ? 1 : 0;
-        bValue = bValue ? 1 : 0;
-      }
-      
-      if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return this.sortDirection === 'asc' ? 1 : -1;
-      
-return 0;
+      const aValue = this.normalizeValue(a[this.sortField]);
+      const bValue = this.normalizeValue(b[this.sortField]);
+
+      return this.compareValues(aValue, bValue) * direction;
     });
   }
+
+  private normalizeValue(
+    value: string | number | boolean | null | undefined
+  ): string | number | null {
+    if (value == null) return null;
+    if (typeof value === 'boolean') return value ? 1 : 0;
+    
+return value;
+  }
+
+  private compareValues(
+    a: string | number | null,
+    b: string | number | null
+  ): number {
+    if (a === b) return 0;
+    if (a === null) return -1;
+    if (b === null) return 1;
+    
+return a < b ? -1 : 1;
+  }
+
+
 
   public toggleUserStatus(user: User): void {
     if (this.isCurrentUser(user)) {
@@ -125,6 +132,47 @@ return;
       });
     }
   }
+
+  public togglePremiumStatus(user: User): void {
+  if (this.isCurrentUser(user)) {
+    alert('Nie możesz zmienić statusu premium swojego konta!');
+    
+return;
+  }
+
+  const newPremiumStatus = !user.isPremium;
+  const confirmMessage = newPremiumStatus 
+    ? `Czy na pewno chcesz dodać status PREMIUM użytkownikowi ${user.name}?\n\n` +
+      `Użytkownik otrzyma dostęp do zaawansowanych funkcji jak:\n` +
+      `- Planowanie posiłków\n` +
+      `- Zaawansowana analiza\n` +
+      `- Nieograniczona baza produktów`
+    : `Czy na pewno chcesz usunąć status PREMIUM użytkownikowi ${user.name}?\n\n` +
+      `Użytkownik straci dostęp do zaawansowanych funkcji.`;
+
+  if (confirm(confirmMessage)) {
+    this.http.patch<User>(`http://localhost:3000/users/${user.id}`, { 
+      isPremium: newPremiumStatus 
+    }).subscribe({
+      next: (updatedUser) => {
+        // Aktualizuj lokalną listę
+        const index = this.users.findIndex((u) => u.id === user.id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+          this.filterUsers();
+        }
+        
+        // Powiadomienie
+        const action = newPremiumStatus ? 'dodano' : 'usunięto';
+        alert(`Status PREMIUM ${action} użytkownikowi ${user.name}.`);
+      },
+      error: (err) => {
+        console.error('Błąd aktualizacji statusu premium:', err);
+        alert('Nie udało się zaktualizować statusu premium użytkownika');
+      }
+    });
+  }
+}
 
   public refreshUsers(): void {
     this.loadUsers();

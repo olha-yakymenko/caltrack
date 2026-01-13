@@ -82,4 +82,24 @@ return user;
       })
     );
   }
+
+  public updateDailyCalorieLimit(calorieLimit: number): Observable<User> {
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser) {
+      throw new Error('Nie znaleziono zalogowanego użytkownika');
+    }
+
+    const updatedUser = {
+      ...currentUser,
+      dailyCalorieLimit: calorieLimit
+    };
+
+    return this.http.put<User>(`${this.apiUrl}/${currentUser.id}`, updatedUser).pipe(
+      tap((user) => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.notificationService.success(`Dzienny limit kalorii został zmieniony na ${calorieLimit} kcal`);
+      })
+    );
+  }
 }

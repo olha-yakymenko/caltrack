@@ -33,8 +33,14 @@ export class DisabledIfInactiveDirective implements OnInit, OnDestroy {
       
   return;
     }
+
+      if (!user) {
+    this.enableIfNeeded();
     
-    const isUserInactive = !user || !user.isActive;
+return;
+  }
+    
+    const isUserInactive = !user.isActive;
     
     if (isUserInactive) {
       this.disableIfNeeded();

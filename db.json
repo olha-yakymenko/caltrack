@@ -150,6 +150,7 @@
       "email": "a@a.com",
       "password": "a",
       "role": "user",
+      "isPremium": true,
       "isActive": true,
       "dailyCalorieLimit": 2500
     },
@@ -160,7 +161,8 @@
       "password": "hashed_password",
       "role": "admin",
       "isActive": true,
-      "dailyCalorieLimit": 2500
+      "isPremium": true,
+      "dailyCalorieLimit": 3796
     }
   ]
 }

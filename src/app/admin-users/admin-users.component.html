@@ -47,6 +47,12 @@
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 }
               </th>
+              <th (click)="sortBy('isPremium')" class="sortable">
+                Premium
+                @if (sortField === 'isPremium') {
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                }
+              </th>
               <th>Limit kalorii</th>
               <th>Akcje</th>
             </tr>
@@ -67,6 +73,11 @@
                     {{ user.isActive ? 'Aktywny' : 'Zawieszony' }}
                   </span>
                 </td>
+                <td>
+                    <span [class]="user.isPremium ? 'premium-active' : 'premium-inactive'">
+                        {{ user.isPremium ? 'TAK' : 'NIE' }}
+                    </span>
+                </td>
                 <td>{{ user.dailyCalorieLimit }} kcal</td>
                 <td class="actions">
                   <button 
@@ -76,6 +87,16 @@
                   >
                     {{ user.isActive ? 'Zawieś' : 'Aktywuj' }}
                   </button>
+
+                  <button 
+                        (click)="togglePremiumStatus(user)"
+                        [class]="user.isPremium ? 'btn-remove-premium' : 'btn-add-premium'"
+                        [disabled]="isCurrentUser(user)"
+                        class="action-btn"
+                    >
+                        {{ user.isPremium ? 'Usuń Premium' : 'Dodaj Premium' }}
+                    </button>
+                    
                   @if (isCurrentUser(user)) {
                     <span class="current-user-hint">(Ty)</span>
                   }

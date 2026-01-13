@@ -1,6 +1,30 @@
 <div class="home-container">
   @if (stats$ | async; as stats) {
-    
+    <div class="welcome-section">
+      <h1>Witaj, {{ stats.userName }}!</h1>
+      @if (stats.isPremium) {
+        <span class="premium-badge">⭐ PREMIUM</span>
+      }
+    </div>
+
+    @if (stats.isPremium && stats.isActive) {
+      <div class="premium-features">
+        <button (click)="toggleCalculator()" class="premium-btn">
+          @if (showCalculator) {
+            ✕ Zamknij kalkulator
+          } @else {
+            🧮 Otwórz kalkulator kalorii
+          }
+        </button>
+      </div>
+    }
+
+    @if (!stats.isActive) {
+      <div class="warning-banner">
+        ⚠️ Twoje konto jest zawieszone. Niektóre funkcje mogą być niedostępne.
+      </div>
+    }
+
     <div class="calorie-circle-wrapper">
       <div class="calorie-ring" [style.background]="getRingGradient(stats.percent, stats.remaining < 0)">
         <div class="inner-circle">
@@ -13,18 +37,71 @@
     <div class="summary-cards">
       <div class="card">
         <p>Cel dzienny</p>
-        <strong>{{ stats.limit }}</strong>
+        <strong>{{ stats.limit }} kcal</strong>
       </div>
       <div class="card">
         <p>Zjedzone</p>
-        <strong>{{ stats.consumed }}</strong>
+        <strong>{{ stats.consumed }} kcal</strong>
       </div>
+      <div class="card">
+        <p>Procent celu</p>
+        <strong>{{ stats.percent | number:'1.0-0' }}%</strong>
+      </div>
+      @if (stats.remaining < 0) {
+        <div class="card warning">
+          <p>Przekroczono limit</p>
+          <strong>{{ -stats.remaining }} kcal</strong>
+        </div>
+      }
     </div>
+
+    @if (showCalculator && stats.isPremium && stats.isActive) {
+      <div class="calculator-container">
+        <app-calorie-calculator
+          (calculate)="onCaloriesCalculated($event)"
+          (close)="onCalculatorClose()"
+        ></app-calorie-calculator>
+      </div>
+    }
     
   } @else {
     <div class="login-prompt">
-      <p>Aby zobaczyć swoje statystyki, zaloguj się.</p>
-      <a routerLink="/login" class="login-btn">Przejdź do logowania</a>
+      <h2>🍎 Śledź swoje kalorie!</h2>
+      <p>Aby zobaczyć swoje statystyki i zarządzać posiłkami, zaloguj się do konta.</p>
+      
+      <div class="prompt-actions">
+        <a routerLink="/login" class="login-btn">Zaloguj się</a>
+        <a routerLink="/register" class="register-btn">Załóż konto</a>
+      </div>
+      
+      <div class="features">
+        <h3>📋 Co zyskujesz?</h3>
+        <div class="feature-list">
+          <div class="feature">
+            <div class="feature-icon">📊</div>
+            <div class="feature-content">
+              <h4>Śledzenie kalorii</h4>
+              <p>Monitoruj dzienne spożycie kalorii w czasie rzeczywistym</p>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-content">
+              <h4>Osiąganie celów</h4>
+              <p>Ustalaj cele i śledź swoje postępy</p>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <div class="feature-icon">⭐</div>
+            <div class="feature-content">
+              <h4>Funkcje Premium</h4>
+              <p>Kalkulator zapotrzebowania, planowanie posiłków, zaawansowana analiza</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   }
 </div>

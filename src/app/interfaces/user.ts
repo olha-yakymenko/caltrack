@@ -5,6 +5,7 @@ export interface User {
   password?: string;
   role: 'user' | 'admin';
   isActive: boolean;
+  isPremium: boolean;
   dailyCalorieLimit: number;
   token?: string; 
 }

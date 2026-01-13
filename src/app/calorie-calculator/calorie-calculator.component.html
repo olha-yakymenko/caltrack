@@ -1,0 +1,116 @@
+<div class="calorie-calculator">
+  <div class="calculator-header">
+    <h3>Kalkulator zapotrzebowania kalorycznego</h3>
+    <button class="close-btn" (click)="onClose()">✕</button>
+  </div>
+  
+  <div class="calculator-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="gender">Płeć</label>
+        <select id="gender" [(ngModel)]="form.gender" class="form-control">
+          <option value="male">Mężczyzna</option>
+          <option value="female">Kobieta</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="age">Wiek (lata)</label>
+        <input 
+          type="number" 
+          id="age" 
+          [(ngModel)]="form.age"
+          min="15"
+          max="100"
+          class="form-control"
+          placeholder="np. 30"
+        />
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="weight">Waga (kg)</label>
+        <input 
+          type="number" 
+          id="weight" 
+          [(ngModel)]="form.weight"
+          min="30"
+          max="200"
+          class="form-control"
+          placeholder="np. 70"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="height">Wzrost (cm)</label>
+        <input 
+          type="number" 
+          id="height" 
+          [(ngModel)]="form.height"
+          min="100"
+          max="250"
+          class="form-control"
+          placeholder="np. 175"
+        />
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="activity">Poziom aktywności</label>
+      <select id="activity" [(ngModel)]="form.activityLevel" class="form-control">
+        <option value="sedentary">🚶‍♂️ Siedzący (brak ćwiczeń)</option>
+        <option value="light">🏃‍♂️ Lekka (1-3 ćwiczenia/tydzień)</option>
+        <option value="moderate">🏋️‍♂️ Umiarkowana (3-5 ćwiczeń/tydzień)</option>
+        <option value="active">🚴‍♂️ Aktywna (codzienne ćwiczenia)</option>
+        <option value="veryActive">🏆 Bardzo aktywna (2x dziennie)</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="goal">Cel</label>
+      <select id="goal" [(ngModel)]="form.goal" class="form-control">
+        <option value="maintain">⚖️ Utrzymanie wagi</option>
+        <option value="loss">⬇️ Utrata wagi</option>
+        <option value="gain">⬆️ Przyrost masy</option>
+      </select>
+    </div>
+    
+    <div class="form-actions">
+      <button (click)="calculateCalories()" class="btn btn-calculate">
+         Oblicz zapotrzebowanie
+      </button>
+      <button (click)="resetForm()" class="btn btn-reset">
+         Resetuj
+      </button>
+    </div>
+  </div>
+  
+  @if (result) {
+    <div class="calculator-result">
+      <div class="result-header">
+        <h4>Twój wynik:</h4>
+        <span class="result-value">{{ result }} kcal/dzień</span>
+      </div>
+      
+      <div class="result-details">
+        <p><strong>BMR (Podstawowa przemiana materii):</strong> {{ bmr }} kcal</p>
+        <p><strong>Cel:</strong> {{ getGoalLabel() }}</p>
+        <p><strong>Aktywność:</strong> {{ getActivityLabel() }}</p>
+      </div>
+      
+      <div class="result-actions">
+        <button (click)="applyToLimit()" class="btn btn-apply">
+          💾 Zastosuj jako dzienny limit
+        </button>
+        <button (click)="resetForm()" class="btn btn-clear">
+          ✏️ Nowe obliczenia
+        </button>
+      </div>
+      
+      <div class="result-info">
+        <p><strong>Uwaga:</strong> To są szacunkowe wartości. Skonsultuj się z dietetykiem dla dokładnego planu.</p>
+      </div>
+    </div>
+  }
+</div>

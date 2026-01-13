@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UserSettingsComponent } from '../user-settings/user-settings.component';
-import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; // Dodaj import
-import { CommonModule } from '@angular/common';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; 
+import { CommonModule, Location } from '@angular/common';
 import { AuthService } from '../serivces/auth.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class NavbarComponent {
   public userSettings = { name: '', email: '' };
 
   protected authService = inject(AuthService);
-  private router = inject(Router);
+  private location = inject(Location);
 
   public openSettings(): void {
     const user = this.authService.getCurrentUser();
@@ -51,6 +51,6 @@ export class NavbarComponent {
   }
 
   public back(): void {
-    void this.router.navigate(['..']);
+    void this.location.back();
   }
 }
