@@ -50,8 +50,8 @@ export class HomeComponent implements OnInit {
   public isPremiumUser = false;
   public isUserActive = false;
 
-  ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
+  public ngOnInit(): void {
+    this.authService.currentUser$.subscribe((user) => {
       this.isPremiumUser = user?.isPremium || false;
       this.isUserActive = user?.isActive || false;
     });
@@ -59,29 +59,32 @@ export class HomeComponent implements OnInit {
 
   public getRingGradient(percent: number, isOverLimit: boolean): string {
     const color = isOverLimit ? '#ff4d4d' : '#4caf50';
-    return `conic-gradient(${color} ${percent * 3.6}deg, #eee 0deg)`;
+    
+return `conic-gradient(${color} ${percent * 3.6}deg, #eee 0deg)`;
   }
 
-  toggleCalculator(): void {
+  public toggleCalculator(): void {
     if (!this.isPremiumUser) {
       alert('Ta funkcja jest dostępna tylko dla użytkowników premium!');
-      return;
+      
+return;
     }
     
     if (!this.isUserActive) {
       alert('Twoje konto jest zawieszone. Aktywuj konto, aby korzystać z funkcji premium.');
-      return;
+      
+return;
     }
     
     this.showCalculator = !this.showCalculator;
   }
 
-  onCaloriesCalculated(calories: number): void {
+  public onCaloriesCalculated(calories: number): void {
     console.log('Obliczone kalorie:', calories);
     alert(`Obliczone dzienne zapotrzebowanie: ${calories} kcal\nMożesz ustawić tę wartość jako swój dzienny limit w ustawieniach profilu.`);
   }
 
-  onCalculatorClose(): void {
+  public onCalculatorClose(): void {
     this.showCalculator = false;
   }
 }

@@ -63,7 +63,7 @@
     [name]="userSettings.name"
     [email]="userSettings.email"
     (save)="saveUserSettings($event)"
-    (cancel)="closeSettings()"
+    (closed)="closeSettings()"
   ></app-user-settings>
 }
 

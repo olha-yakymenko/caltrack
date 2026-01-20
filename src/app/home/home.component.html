@@ -13,17 +13,12 @@
           @if (showCalculator) {
             ✕ Zamknij kalkulator
           } @else {
-            🧮 Otwórz kalkulator kalorii
+             Otwórz kalkulator kalorii
           }
         </button>
       </div>
     }
 
-    @if (!stats.isActive) {
-      <div class="warning-banner">
-        ⚠️ Twoje konto jest zawieszone. Niektóre funkcje mogą być niedostępne.
-      </div>
-    }
 
     <div class="calorie-circle-wrapper">
       <div class="calorie-ring" [style.background]="getRingGradient(stats.percent, stats.remaining < 0)">

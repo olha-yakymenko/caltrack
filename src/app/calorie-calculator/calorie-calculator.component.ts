@@ -20,12 +20,12 @@ interface CalorieForm {
   styleUrl: './calorie-calculator.component.scss'
 })
 export class CalorieCalculatorComponent {
-  @Output() calculate = new EventEmitter<number>();
-  @Output() close = new EventEmitter<void>();
+  @Output() public calculate = new EventEmitter<number>();
+  @Output() public closed = new EventEmitter<void>();
 
   private authService = inject(AuthService);
   
-  form: CalorieForm = {
+  public form: CalorieForm = {
     gender: 'male',
     age: null,
     weight: null,
@@ -34,10 +34,10 @@ export class CalorieCalculatorComponent {
     goal: 'maintain'
   };
 
-  result: number | null = null;
-  bmr: number | null = null;
+  public result: number | null = null;
+  public bmr: number | null = null;
 
-  activityMultipliers = {
+  public activityMultipliers = {
     sedentary: 1.2,
     light: 1.375,
     moderate: 1.55,
@@ -45,16 +45,17 @@ export class CalorieCalculatorComponent {
     veryActive: 1.9
   };
 
-  goalMultipliers = {
+  public goalMultipliers = {
     maintain: 1,
     loss: 0.85,
     gain: 1.15
   };
 
-  calculateCalories(): void {
+  public calculateCalories(): void {
     if (!this.form.age || !this.form.weight || !this.form.height) {
       alert('Proszę wypełnić wszystkie wymagane pola');
-      return;
+      
+return;
     }
 
     let bmr;
@@ -74,7 +75,7 @@ export class CalorieCalculatorComponent {
     this.calculate.emit(this.result);
   }
 
-  resetForm(): void {
+  public resetForm(): void {
     this.form = {
       gender: 'male',
       age: null,
@@ -87,21 +88,15 @@ export class CalorieCalculatorComponent {
     this.bmr = null;
   }
 
-  onClose(): void {
-    this.close.emit();
+  public onClose(): void {
+    this.closed.emit();
   }
 
-  // applyToLimit(): void {
-  //   if (this.result) {
-  //     alert(`Nowy limit kalorii: ${this.result} kcal został obliczony. Możesz go ustawić w ustawieniach profilu.`);
-  //   }
-  // }
-
-
-    async applyToLimit(): Promise<void> {
+  public async applyToLimit(): Promise<void> {
     if (!this.result) {
       alert('Najpierw oblicz zapotrzebowanie kaloryczne!');
-      return;
+      
+return;
     }
 
     const confirmed = confirm(`Czy na pewno chcesz ustawić ${this.result} kcal jako swój dzienny limit kalorii?`);
@@ -121,16 +116,17 @@ export class CalorieCalculatorComponent {
     } 
   }
 
-  getGoalLabel(): string {
+  public getGoalLabel(): string {
   const labels = {
     maintain: 'Utrzymanie wagi',
     loss: 'Utrata wagi',
     gain: 'Przyrost masy'
   };
-  return labels[this.form.goal];
+  
+return labels[this.form.goal];
 }
 
-getActivityLabel(): string {
+public getActivityLabel(): string {
   const labels = {
     sedentary: 'Siedzący (brak ćwiczeń)',
     light: 'Lekka (1-3 ćwiczenia/tydzień)',
@@ -138,6 +134,7 @@ getActivityLabel(): string {
     active: 'Aktywna (codzienne ćwiczenia)',
     veryActive: 'Bardzo aktywna (2x dziennie)'
   };
-  return labels[this.form.activityLevel];
+  
+return labels[this.form.activityLevel];
 }
 }
