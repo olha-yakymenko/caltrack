@@ -33,16 +33,6 @@
       </select>
     </div>
     
-    <div class="filter-group checkbox">
-      <input 
-        type="checkbox" 
-        id="underLimit" 
-        [checked]="underLimitOnly"
-        (change)="onUnderLimitChange($event)"
-      />
-      <label for="underLimit">Tylko poniżej limitu kalorii</label>
-    </div>
-    
     <div class="filter-group">
       <span class="filter-label">Zakres dat:</span>
       <div class="date-range">
@@ -148,34 +138,44 @@
     
     <div class="filter-group">
       <span class="filter-label">Zakres gramów składnika:</span>
-      <div class="range-inputs">
-        <div>
-          <label for="gramsMin">Min:</label>
-          <input 
-            id="gramsMin"
-            type="number" 
-            [value]="gramsRange.min"
-            (change)="onGramsMinChange($event)"
-            min="0"
-            max="2000"
-          />
-        </div>
-        <div>
-          <label for="gramsMax">Max:</label>
-          <input 
-            id="gramsMax"
-            type="number" 
-            [value]="gramsRange.max"
-            (change)="onGramsMaxChange($event)"
-            min="0"
-            max="2000"
-          />
-        </div>
-      </div>
-      <div class="range-values">
-        {{ gramsRange.min }}g - {{ gramsRange.max }}g
+  <div class="range-inputs">
+    <div class="input-group">
+      <label for="gramsMin">Min:</label>
+      <div class="input-container">
+        <input 
+          id="gramsMin"
+          type="number" 
+          [value]="gramsRange.min"
+          (change)="onGramsMinChange($event)"
+          min="0"
+          max="2000"
+          placeholder="0"
+        />
+        <span class="unit">g</span>
       </div>
     </div>
+    
+    <div class="input-group">
+      <label for="gramsMax">Max:</label>
+      <div class="input-container">
+        <input 
+          id="gramsMax"
+          type="number" 
+          [value]="gramsRange.max"
+          (change)="onGramsMaxChange($event)"
+          min="0"
+          max="2000"
+          placeholder="2000"
+        />
+        <span class="unit">g</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="range-values">
+    {{ gramsRange.min }}g - {{ gramsRange.max }}g
+  </div>
+</div>
     
     
     <button type="button" class="clear-filters-btn" (click)="clearFilters()">
@@ -190,29 +190,53 @@
     
     <select (change)="changePageSize($event)">
       @for (size of pageSizeOptions; track size) {
-        <option [value]="size" [selected]="size === pageSize">{{ size }} na stronę</option>
+        <option [value]="size" [selected]="size === pageSize">{{ size }} dni na stronę</option>
       }
     </select>
   </div>
 
-  <div class="meal-cards">
-    @for (meal of pagedMeals; track meal.id) {
-      <div class="meal-card">
-        <div class="meal-id">ID: {{ meal.id }}</div>
-        <div class="meal-name">{{ meal.name }}</div>
-        <div class="meal-date">{{ meal.date }}</div>
-        <div class="meal-calories">{{ meal.totalCalories }} kcal</div>
-        
-        <div class="meal-actions">
-          <a [routerLink]="['/meal', meal.id, 'details']" class="btn-details" [appDisabledIfInactive]="true">Szczegóły</a>
-          <a [routerLink]="['/meal', meal.id, 'form']" class="btn-edit" [appDisabledIfInactive]="true">Edytuj</a>
-          <button type="button" (click)="deleteMeal(meal.id)" class="btn-delete" [appDisabledIfInactive]="true">Usuń</button>
+<div class="day-groups">
+  @for (dayGroup of visibleDayGroups; track dayGroup.date) {
+    <div class="day-group">
+      <div class="day-header"
+        (click)="toggleDayGroup(dayGroup)"
+        tabindex="0"
+        (keydown.enter)="toggleDayGroup(dayGroup)"
+        (keydown.space)="toggleDayGroup(dayGroup)">
+        <div class="day-header-content">
+          <span class="day-date">{{ dayGroup.formattedDate }}</span>
+          <div class="day-stats">
+            <span class="day-total-calories">Łącznie: {{ dayGroup.totalCalories }} kcal</span>
+            <span class="day-meal-count">({{ dayGroup.meals.length }} posiłków)</span>
+          </div>
+        </div>
+        <div class="day-toggle" [class.expanded]="dayGroup.expanded">
+          {{ dayGroup.expanded ? '▲' : '▼' }}
         </div>
       </div>
-    } @empty {
-      <p class="no-meals">Brak posiłków spełniających kryteria wyszukiwania.</p>
-    }
-  </div>
+      
+      <div class="day-meals" [class.expanded]="dayGroup.expanded" [class.collapsed]="!dayGroup.expanded">
+        <div class="meals-container">
+          @for (meal of dayGroup.meals; track meal.id) {
+            <div class="meal-card">
+              <div class="meal-id">ID: {{ meal.id }}</div>
+              <div class="meal-name">{{ meal.name }}</div>
+              <div class="meal-calories">{{ meal.totalCalories }}</div>
+              
+              <div class="meal-actions">
+                <a [routerLink]="['/meal', meal.id, 'details']" class="btn-details" [appDisabledIfInactive]="true">Szczegóły</a>
+                <a [routerLink]="['/meal', meal.id, 'form']" class="btn-edit" [appDisabledIfInactive]="true">Edytuj</a>
+                <button type="button" (click)="deleteMeal(meal.id)" class="btn-delete" [appDisabledIfInactive]="true">Usuń</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <p class="no-meals">Brak posiłków spełniających kryteria wyszukiwania.</p>
+  }
+</div>
 
   <div class="pagination">
     <button type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>

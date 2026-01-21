@@ -1,16 +1,22 @@
 <div 
   class="dialog-overlay"
   (click)="onCancel()"
+  (keydown.enter)="onCancel()"
+  (keydown.space)="onCancel(); $event.preventDefault()"
   tabindex="0"
   aria-label="Kliknij w tło aby zamknąć dialog"
   (keydown)="onOverlayKeydown($event)"
 >
-  <div
-    class="dialog"
-    role="dialog"
-    aria-labelledby="dialog-title"
-    (click)="$event.stopPropagation()"
-  >
+
+<div
+  class="dialog"
+  role="dialog"
+  aria-labelledby="dialog-title"
+  (click)="$event.stopPropagation()"
+  (keydown.enter)="$event.stopPropagation()"
+  (keydown.space)="$event.stopPropagation()"
+>
+
     <h2 id="dialog-title">Edytuj dane użytkownika</h2>
 
     <form [formGroup]="settingsForm" class="settings-form">

@@ -77,4 +77,8 @@ export class MealService {
   public getProducts(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${this.apiUrl}/products`);
   }
+
+  public addProduct(product: Partial<Product>): Observable<Product> {
+    return this.httpClient.post<Product>(`${this.apiUrl}/products`, product);
+  }
 }

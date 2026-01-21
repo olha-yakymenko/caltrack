@@ -7,24 +7,33 @@ import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.
 import { Product } from '../interfaces/product';
 import { NotificationService } from '../serivces/notification.service';
 import { AuthService } from '../serivces/auth.service';
+import { CommonModule } from '@angular/common';
 
 interface ExtendedMeal extends Meal {
   imageUrl?: string;
   hasImage?: boolean;
 }
 
+interface DayGroup {
+  date: string;
+  formattedDate: string;
+  totalCalories: number;
+  meals: Meal[];
+  expanded: boolean;
+}
+
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | '';
 
 @Component({
   selector: 'app-meal-list',
-  imports: [RouterModule, ReactiveFormsModule, DisabledIfInactiveDirective],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, DisabledIfInactiveDirective],
   templateUrl: './meal-list.component.html',
   styleUrl: './meal-list.component.scss',
 })
 export class MealListComponent implements OnInit {
   public meals: Meal[] = [];
   public filteredMeals: Meal[] = [];
-  public pagedMeals: Meal[] = [];
+  public dayGroups: DayGroup[] = [];
 
   public currentPage = 1;
   public pageSize = 5;
@@ -57,7 +66,6 @@ export class MealListComponent implements OnInit {
     hasImage: new FormControl(false)
   });
 
-
   public availableProducts: Product[] = [];
   
   protected mealService = inject(MealService);
@@ -65,7 +73,6 @@ export class MealListComponent implements OnInit {
   private authService = inject(AuthService);
 
   public ngOnInit(): void {    
-    
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
@@ -100,7 +107,7 @@ return;
       next: (res: Meal[]) => {
         this.meals = res.filter((meal) => meal.userId === this.currentUserId);
         this.filteredMeals = [...this.meals];
-        this.applyPagination();
+        this.groupMealsByDay();
         this.calculateGramsRange();
       },
       error: (err) => {
@@ -112,6 +119,61 @@ return;
     this.filterForm.valueChanges.subscribe(() => {
       this.applyFilters();
     });
+  }
+
+private groupMealsByDay(): void {
+  const groupedByDate = this.filteredMeals.reduce((groups, meal) => {
+    const date = this.extractDateOnly(meal.date);
+    (groups[date] ??= []).push(meal); 
+    
+  return groups;
+  }, {} as Record<string, Meal[] | undefined>); 
+
+  this.dayGroups = Object.keys(groupedByDate)
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+    .map((date) => {
+      const meals = groupedByDate[date]!; 
+      const totalCalories = meals.reduce((sum, meal) => sum + (meal.totalCalories || 0), 0);
+      
+      return {
+        date,
+        formattedDate: this.formatDate(date),
+        totalCalories,
+        meals: meals.sort((a, b) => a.name.localeCompare(b.name)),
+        expanded: false
+      };
+    });
+
+  this.applyPagination();
+}
+
+  private extractDateOnly(fullDate: string): string {
+    return fullDate.split('T')[0];
+  }
+
+  private formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return 'Dzisiaj';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Wczoraj';
+    } 
+      
+return date.toLocaleDateString('pl-PL', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    
+  }
+
+public toggleDayGroup(dayGroup: DayGroup): void {
+    dayGroup.expanded = !dayGroup.expanded;
   }
 
   private calculateGramsRange(): void {
@@ -133,25 +195,28 @@ return;
 
   public deleteMeal(id?: string): void {
     if (!id) return;
-    this.mealService.deleteMeal(id).subscribe();
-    this.applyFilters();
+    this.mealService.deleteMeal(id).subscribe({
+      next: () => {
+        this.applyFilters();
+      }
+    });
   }
 
   public sortMealsAsc(): void {
     this.filteredMeals.sort((a, b) => a.name.localeCompare(b.name));
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public sortMealsDesc(): void {
     this.filteredMeals.sort((a, b) => b.name.localeCompare(a.name));
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public sortDateAsc(): void {
     this.filteredMeals.sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public toString(value: unknown): string {
@@ -162,21 +227,21 @@ return;
     this.filteredMeals.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public sortCaloriesAsc(): void {
     this.filteredMeals.sort(
       (a, b) => (a.totalCalories ?? 0) - (b.totalCalories ?? 0)
     );
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public sortCaloriesDesc(): void {
     this.filteredMeals.sort(
       (a, b) => (b.totalCalories ?? 0) - (a.totalCalories ?? 0)
     );
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   public onNameFilterChange(event: Event): void {
@@ -187,11 +252,6 @@ return;
   public onCaloriesFilterChange(event: Event): void {
     this.caloriesFilter = (event.target as HTMLSelectElement)
       .value as 'low' | 'medium' | 'high' | '';
-    this.applyFilters();
-  }
-
-  public onUnderLimitChange(event: Event): void {
-    this.underLimitOnly = (event.target as HTMLInputElement).checked;
     this.applyFilters();
   }
 
@@ -265,7 +325,7 @@ return;
     );
 
     this.currentPage = 1;
-    this.applyPagination();
+    this.groupMealsByDay();
   }
 
   private passesNameFilter(meal: Meal): boolean {
@@ -321,7 +381,7 @@ return;
     
     const patterns = mealTypePatterns[this.mealType];
     
-return patterns.some((pattern) => mealName.includes(pattern));
+    return patterns.some((pattern) => mealName.includes(pattern));
   }
 
   private passesProductsFilter(meal: Meal): boolean {
@@ -344,20 +404,24 @@ return patterns.some((pattern) => mealName.includes(pattern));
     
     const extendedMeal = meal as ExtendedMeal;
     
-return !!extendedMeal.imageUrl || extendedMeal.hasImage === true;
+    return !!extendedMeal.imageUrl || extendedMeal.hasImage === true;
   }
 
   public applyPagination(): void {
-    this.totalPages = Math.ceil(this.filteredMeals.length / this.pageSize) || 1;
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.pagedMeals = this.filteredMeals.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.dayGroups.length / this.pageSize) || 1;
   }
 
   public goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.applyPagination();
+  }
+
+  public get visibleDayGroups(): DayGroup[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    
+    return this.dayGroups.slice(startIndex, endIndex);
   }
 
   public changePageSize(event: Event): void {

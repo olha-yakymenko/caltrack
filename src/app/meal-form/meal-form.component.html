@@ -30,7 +30,14 @@
       }
     }
 
-    <button type="button" (click)="next()">Dalej</button>
+    <button 
+      type="button" 
+      (click)="next()"
+      (keyup.enter)="next()"
+      (keyup.space)="next()"
+    >
+      Dalej
+    </button>
   }
 
   <!-- ================== STEP 2: Składniki ================== -->
@@ -40,6 +47,7 @@
     <div formArrayName="items">
       @for (item of mealForm.controls.items.controls; track $index) {
         @let itemIndex = $index;
+        @let itemGroup = item;
         <div [formGroupName]="$index" class="ingredient-row">
 
         <label>
@@ -53,13 +61,6 @@
         </label>
 
           @if (filteredProducts[itemIndex]?.length) {
-            <!-- <ul class="autocomplete">
-              @for (product of filteredProducts[itemIndex]; track product.id) {
-                <li (click)="selectProduct(product, itemIndex)">
-                  {{ product.name }}
-                </li>
-              }
-            </ul> -->
             <ul class="autocomplete">
                 @for (product of filteredProducts[itemIndex]; track product.id) {
                   <li>
@@ -67,16 +68,50 @@
                       type="button"
                       class="autocomplete-item"
                       (click)="selectProduct(product, itemIndex)"
+                      (keyup.enter)="selectProduct(product, itemIndex)"
+                      (keyup.space)="selectProduct(product, itemIndex)"
+                      tabindex="0"
                     >
                       {{ product.name }}
                     </button>
                   </li>
                 }
+                <li>
+                  <button
+                    type="button"
+                    class="autocomplete-item add-new"
+                    (click)="openAddProductModal(itemIndex)"
+                    (keyup.enter)="openAddProductModal(itemIndex)"
+                    (keyup.space)="openAddProductModal(itemIndex)"
+                    tabindex="0"
+                  >
+                    + Dodaj "{{ itemGroup.controls.productName.value }}"
+                  </button>
+                </li>
               </ul>
           }
+
+          @if (itemGroup.controls.productName.value && 
+                itemGroup.controls.productName.value.length >= 2 &&
+                !itemGroup.controls.productId.value &&  
+                !hasExactMatchInProducts(itemGroup.controls.productName.value)) { 
+              <div class="add-product-prompt">
+                <button 
+                  type="button" 
+                  class="btn-add-custom"
+                  (click)="openAddProductModal(itemIndex)"
+                  (keyup.enter)="openAddProductModal(itemIndex)"
+                  (keyup.space)="openAddProductModal(itemIndex)"
+                  tabindex="0"
+                >
+                  Dodaj "{{ itemGroup.controls.productName.value }}" jako nowy produkt
+                </button>
+              </div>
+            }
+          
           @if (item.controls.productId.touched && item.controls.productId.errors) {
             @if (item.controls.productId.errors['required']) {
-              <small class="error">Wybierz produkt</small>
+              <small class="error">Wybierz produkt lub dodaj nowy</small>
             }
           }
 
@@ -96,7 +131,14 @@
             }
           }
 
-          <button type="button" (click)="removeItem($index)">Usuń składnik</button>
+          <button 
+            type="button" 
+            (click)="removeItem($index)"
+            (keyup.enter)="removeItem($index)"
+            (keyup.space)="removeItem($index)"
+          >
+            Usuń składnik
+          </button>
         </div>
       }
     </div>
@@ -105,9 +147,32 @@
       <p class="error">Suma gramów musi być większa niż 0</p>
     }
 
-    <button type="button" (click)="addItem()">+ Dodaj składnik</button>
-    <button type="button" (click)="back()">Wstecz</button>
-    <button type="button" (click)="next()">Dalej</button>
+    <button 
+      type="button" 
+      (click)="addItem()"
+      (keyup.enter)="addItem()"
+      (keyup.space)="addItem()"
+    >
+      + Dodaj składnik
+    </button>
+    
+    <button 
+      type="button" 
+      (click)="back()"
+      (keyup.enter)="back()"
+      (keyup.space)="back()"
+    >
+      Wstecz
+    </button>
+    
+    <button 
+      type="button" 
+      (click)="next()"
+      (keyup.enter)="next()"
+      (keyup.space)="next()"
+    >
+      Dalej
+    </button>
   }
 
   <!-- ================== STEP 3: Podsumowanie ================== -->
@@ -119,13 +184,99 @@
 
     <h4>Składniki:</h4>
     <ul>
-      @for (item of mealForm.controls.items.controls; track $index) {
-        <li>Produkt (ID): {{ item.controls.productId.value }}, Ilość: {{ item.controls.grams.value }} g</li>
+      @for (item of mealForm.controls.items.controls; track $index; let i = $index) {
+        @let productId = item.controls.productId.value;
+        @let productName = item.controls.productName.value || getProductName(productId);
+        <li>
+          <strong>{{ productName }}</strong> - {{ item.controls.grams.value }} g
+          @if (item.controls.isCustomProduct.value) {
+            <span class="custom-badge">(nowy produkt)</span>
+          }
+        </li>
       }
     </ul>
 
-    <button type="button" (click)="back()">Wstecz</button>
-    <button type="button" (click)="saveMeal()" [disabled]="mealForm.invalid">Zapisz posiłek</button>
+    <button 
+      type="button" 
+      (click)="back()"
+      (keyup.enter)="back()"
+      (keyup.space)="back()"
+    >
+      Wstecz
+    </button>
+    
+    <button 
+      type="button" 
+      (click)="saveMeal()" 
+      [disabled]="mealForm.invalid"
+      (keyup.enter)="saveMeal()"
+      (keyup.space)="saveMeal()"
+    >
+      Zapisz posiłek
+    </button>
   }
 
 </form>
+
+@if (showAddProductModal) {
+  <div
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    tabindex="0"
+    (click)="closeAddProductModal()"
+    (keyup.enter)="closeAddProductModal()"
+    (keyup.space)="closeAddProductModal()"
+    (keydown.escape)="closeAddProductModal()"
+  >
+    <div 
+      class="modal-content" 
+      (click)="$event.stopPropagation()"
+      role="document"
+      aria-labelledby="modal-title"
+      tabindex="0"
+      (keydown.escape)="closeAddProductModal()"
+    >
+      <h3 id="modal-title">Dodaj nowy produkt</h3>
+      
+      <div class="modal-body">
+        <p>Dodajesz produkt: <strong>{{ modalData.productName }}</strong></p>
+        
+        <label>
+          Kalorie na 100g:
+          <input 
+            type="number" 
+            [(ngModel)]="modalData.caloriesPer100g"
+            placeholder="np. 120"
+            min="1"
+            max="900"
+            (keyup.enter)="saveCustomProduct()"
+            #caloriesInput
+           
+          />
+        </label>
+        
+        <div class="modal-actions">
+          <button 
+            type="button" 
+            (click)="closeAddProductModal()"
+            (keyup.enter)="closeAddProductModal()"
+            (keyup.space)="closeAddProductModal()"
+          >
+            Anuluj
+          </button>
+          
+          <button 
+            type="button" 
+            (click)="saveCustomProduct()" 
+            [disabled]="!modalData.caloriesPer100g"
+            (keyup.enter)="saveCustomProduct()"
+            (keyup.space)="saveCustomProduct()"
+          >
+            Dodaj produkt
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

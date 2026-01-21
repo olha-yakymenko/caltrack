@@ -9,6 +9,18 @@
       "id": "2",
       "name": "Kurczak",
       "caloriesPer100g": 165
+    },
+    {
+      "id": "7f9f",
+      "name": "dca",
+      "caloriesPer100g": 100,
+      "userId": "1"
+    },
+    {
+      "id": "c1d6",
+      "name": "dc",
+      "caloriesPer100g": 11,
+      "userId": "1"
     }
   ],
   "meals": [
@@ -141,6 +153,66 @@
         }
       ],
       "totalCalories": 1650
+    },
+    {
+      "id": "3996",
+      "userId": "1",
+      "name": "sdfv",
+      "date": "2026-01-20T23:09",
+      "items": [
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 120
+        }
+      ],
+      "totalCalories": 198
+    },
+    {
+      "id": "2abd",
+      "userId": "1",
+      "name": "sec",
+      "date": "2026-01-20T23:35",
+      "items": [
+        {
+          "productId": "1",
+          "productName": "Ryż",
+          "grams": 100
+        }
+      ],
+      "totalCalories": 130
+    },
+    {
+      "id": "f28b",
+      "userId": "1",
+      "name": "adea",
+      "date": "2026-01-21T12:32",
+      "items": [
+        {
+          "productId": "7f9f",
+          "productName": "dca",
+          "grams": 2000,
+          "isCustomProduct": false,
+          "customProductCalories": null
+        }
+      ],
+      "totalCalories": 2000
+    },
+    {
+      "id": "e283",
+      "userId": "1",
+      "name": "pdf",
+      "date": "2026-01-21T13:37",
+      "items": [
+        {
+          "productId": "c1d6",
+          "productName": "dc",
+          "grams": 10,
+          "isCustomProduct": true,
+          "customProductCalories": 11
+        }
+      ],
+      "totalCalories": 1
     }
   ],
   "users": [
