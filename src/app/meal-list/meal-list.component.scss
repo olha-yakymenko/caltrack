@@ -1,22 +1,27 @@
 $mobile-breakpoint: 768px;
 $small-mobile: 480px;
-$primary-color: #2e7d32;
-$primary-light: #4caf50;
-$primary-dark: #1b5e20;
-$secondary-color: #2196f3;
-$background-light: #f8f9fa;
-$border-color: #e9ecef;
-$text-color: #333;
-$text-light: #6c757d;
-$shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 6px 20px rgba(0, 0, 0, 0.12);
+
+/* ===== VARIABLES ===== */
+$primary-color: var(--color-primary);
+$primary-light: var(--color-primary-light);
+$primary-dark: var(--color-primary-dark);
+$secondary-color: var(--color-secondary);
+$background-light: var(--color-surface);
+$background-alt: var(--color-surface-alt);
+$border-color: var(--color-border);
+$text-color: var(--color-text);
+$text-light: var(--color-text-secondary);
+$text-muted: var(--color-text-muted);
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+$shadow-lg: var(--shadow-lg);
 $radius-sm: 6px;
 $radius-md: 12px;
 $radius-lg: 16px;
 $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
 
+/* ===== MAIN CONTAINER ===== */
 .meal-list {
   max-width: 1000px;
   margin: 2rem auto;
@@ -25,6 +30,8 @@ $transition-normal: 0.3s ease;
   flex-direction: column;
   gap: 1.5rem;
   font-family: 'Segoe UI', 'Arial', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
 
   @media (max-width: $mobile-breakpoint) {
     margin: 1rem auto;
@@ -37,14 +44,15 @@ $transition-normal: 0.3s ease;
   }
 }
 
+/* ===== SORTING ===== */
 .meal-sort {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
-  border: 2px solid #c5e1a5;
+  background: var(--color-surface-alt);
+  border: 2px solid var(--color-border);
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
 
@@ -89,7 +97,7 @@ $transition-normal: 0.3s ease;
       border: none;
       border-radius: $radius-sm;
       padding: 0.5rem 1rem;
-      background: linear-gradient(to bottom, $primary-light, $primary-color);
+      background: var(--gradient-primary);
       color: white;
       font-size: 0.9rem;
       font-weight: 600;
@@ -120,7 +128,7 @@ $transition-normal: 0.3s ease;
       }
 
       &:focus-visible {
-        outline: 3px solid #a5d6a7;
+        outline: 3px solid rgba(var(--color-primary-rgb), 0.3);
         outline-offset: 2px;
       }
 
@@ -133,6 +141,7 @@ $transition-normal: 0.3s ease;
   }
 }
 
+/* ===== DAY GROUPS ===== */
 .day-groups {
   display: flex;
   flex-direction: column;
@@ -148,7 +157,7 @@ $transition-normal: 0.3s ease;
   border: 2px solid $border-color;
   border-radius: $radius-md;
   overflow: hidden;
-  background: white;
+  background: $background-light;
   box-shadow: $shadow-sm;
   transition: box-shadow $transition-normal;
 
@@ -161,7 +170,7 @@ $transition-normal: 0.3s ease;
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem;
-    background: linear-gradient(135deg, $background-light 0%, #f0fdf4 100%);
+    background: var(--color-surface-alt);
     cursor: pointer;
     user-select: none;
     transition: background-color $transition-fast;
@@ -174,7 +183,7 @@ $transition-normal: 0.3s ease;
     }
 
     &:hover {
-      background: linear-gradient(135deg, #e9ecef 0%, #e6f7ed 100%);
+      background: $background-alt;
     }
 
     .day-header-content {
@@ -215,7 +224,7 @@ $transition-normal: 0.3s ease;
           font-size: 0.95rem;
           font-weight: 600;
           color: $text-color;
-          background: #ffeaa7;
+          background: rgba(var(--color-warning), 0.2);
           padding: 0.3rem 0.8rem;
           border-radius: 20px;
           display: inline-flex;
@@ -230,7 +239,7 @@ $transition-normal: 0.3s ease;
         .day-meal-count {
           font-size: 0.9rem;
           color: $text-light;
-          background: #dfe6e9;
+          background: rgba(var(--color-secondary), 0.1);
           padding: 0.3rem 0.8rem;
           border-radius: 20px;
           display: inline-flex;
@@ -266,6 +275,7 @@ $transition-normal: 0.3s ease;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      background-color: $background-light;
 
       @media (max-width: $mobile-breakpoint) {
         padding: 1rem;
@@ -282,7 +292,7 @@ $transition-normal: 0.3s ease;
         gap: 1rem;
         align-items: center;
         padding: 1rem;
-        background: white;
+        background: $background-light;
         border: 1px solid $border-color;
         border-radius: $radius-sm;
         transition: all $transition-fast;
@@ -297,12 +307,13 @@ $transition-normal: 0.3s ease;
           transform: translateY(-2px);
           box-shadow: $shadow-sm;
           border-color: $primary-light;
+          background-color: $background-alt;
         }
 
         .meal-id {
           font-size: 0.85rem;
-          color: $text-light;
-          background: $background-light;
+          color: $text-muted;
+          background: $background-alt;
           padding: 0.2rem 0.5rem;
           border-radius: $radius-sm;
           text-align: center;
@@ -408,7 +419,7 @@ $transition-normal: 0.3s ease;
           }
 
           .btn-details {
-            background: linear-gradient(to bottom, $secondary-color, #1976d2);
+            background: var(--gradient-secondary);
             color: white;
 
             &:hover:not(:disabled) {
@@ -443,17 +454,18 @@ $transition-normal: 0.3s ease;
     .no-meals-in-day {
       padding: 2rem;
       text-align: center;
-      color: $text-light;
+      color: $text-muted;
       font-style: italic;
-      background: $background-light;
+      background: $background-alt;
     }
   }
 }
 
+/* ===== EMPTY STATE ===== */
 .no-meals {
   text-align: center;
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, $background-light 0%, #f8f9fa 100%);
+  background: var(--color-surface-alt);
   border-radius: $radius-md;
   border: 2px dashed $border-color;
 
@@ -465,20 +477,20 @@ $transition-normal: 0.3s ease;
   }
 
   p {
-    color: $text-light;
+    color: $text-muted;
     font-size: 1.1rem;
     margin: 0;
   }
 }
 
-// AKTUALIZACJA: Dodajemy klasy dla rozwijania/zwijania
+/* ===== COLLAPSE/EXPAND ANIMATIONS ===== */
 .day-meals.collapsed {
   max-height: 0;
   transition: max-height 0.3s ease-out;
 }
 
 .day-meals.expanded {
-  max-height: 5000px; // Wysoka wartość, aby pomieścić wszystkie posiłki
+  max-height: 5000px;
   transition: max-height 0.5s ease-in;
 }
 
@@ -486,7 +498,7 @@ $transition-normal: 0.3s ease;
   transform: rotate(180deg);
 }
 
-// Aktualizacja paginacji dla nowej struktury
+/* ===== PAGINATION ===== */
 .pagination {
   display: flex;
   align-items: center;
@@ -494,7 +506,7 @@ $transition-normal: 0.3s ease;
   gap: 1rem;
   margin: 2rem 0;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #e8f5e9 100%);
+  background: var(--color-surface-alt);
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
 
@@ -515,7 +527,7 @@ $transition-normal: 0.3s ease;
       height: 40px;
       border-radius: $radius-sm;
       border: none;
-      background: linear-gradient(to bottom, $primary-light, $primary-color);
+      background: var(--gradient-primary);
       color: white;
       font-size: 1rem;
       font-weight: 600;
@@ -535,7 +547,7 @@ $transition-normal: 0.3s ease;
       }
 
       &:disabled {
-        background: #bbf7d0;
+        background: rgba(var(--color-primary-rgb), 0.2);
         color: $primary-dark;
         cursor: not-allowed;
         transform: none;
@@ -578,11 +590,12 @@ $transition-normal: 0.3s ease;
       height: 40px;
       padding: 0 0.75rem;
       border-radius: $radius-sm;
-      border: 2px solid #86efac;
-      background: white;
+      border: 2px solid rgba(var(--color-primary-rgb), 0.3);
+      background: $background-light;
       font-size: 0.9rem;
       cursor: pointer;
       transition: border-color $transition-fast;
+      color: $text-color;
 
       @media (max-width: $mobile-breakpoint) {
         height: 35px;
@@ -596,189 +609,31 @@ $transition-normal: 0.3s ease;
       &:focus {
         outline: none;
         border-color: $primary-light;
-        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25);
+        box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.25);
       }
     }
   }
 }
 
-.meal-filters {
-  background: $background-light;
-  padding: 1.5rem;
-  border-radius: $radius-md;
-  margin-bottom: 1.5rem;
-  border: 2px solid $border-color;
-  box-shadow: $shadow-sm;
-
-  @media (max-width: $mobile-breakpoint) {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1.25rem;
-    color: $primary-dark;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &::before {
-      content: "🔍";
-    }
-
-    @media (max-width: $mobile-breakpoint) {
-      font-size: 1.1rem;
-    }
-  }
-}
-
-.filter-group {
-  margin-bottom: 1.25rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  label,
-  .filter-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: $text-color;
-    font-size: 0.95rem;
-  }
-
-  input,
-  select {
-    width: 80%;
-    padding: 0.75rem 1rem;
-    border: 2px solid $border-color;
-    border-radius: $radius-sm;
-    font-size: 0.95rem;
-    transition: all $transition-fast;
-    background: white;
-
-    &:focus {
-      outline: none;
-      border-color: $primary-light;
-      box-shadow: 0 0 0 3px rgba($primary-light, 0.2);
-    }
-
-    &:hover:not(:disabled) {
-      border-color: darken($border-color, 10%);
-    }
-
-    &::placeholder {
-      color: lighten($text-light, 20%);
-    }
-  }
-}
-
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  gap: 1rem;
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid $border-color;
-    border-top-color: $primary-color;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  p {
-    color: $text-light;
-    font-size: 1rem;
-  }
-}
-
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: $background-light;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: darken($border-color, 10%);
-  border-radius: 4px;
-
-  &:hover {
-    background: darken($border-color, 20%);
-  }
-}
-
-[role="button"] {
-  cursor: pointer;
-}
-
-[tabindex]:focus-visible {
-  outline: 2px solid $primary-color;
-  outline-offset: 2px;
-}
-
-@media print {
-  .meal-sort,
-  .meal-filters,
-  .pagination,
-  .meal-actions {
-    display: none !important;
-  }
-
-  .day-header {
-    cursor: default !important;
-    background: none !important;
-    border-bottom: 1px solid #ccc !important;
-  }
-
-  .day-group {
-    break-inside: avoid;
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
-  }
-}
-
-
-
-
-
-/* ===== VARIABLES ===== */
-$filter-primary: #2e7d32;
-$filter-primary-light: #4caf50;
-$filter-primary-dark: #1b5e20;
-$filter-secondary: #43a047;
-$filter-accent: #81c784;
-$filter-bg: #ffffff;
-$filter-border: #c8e6c9;
-$filter-text: #1b5e20;
-$filter-text-light: #4caf50;
-$filter-hover: #e8f5e9;
-$filter-focus: rgba(46, 125, 50, 0.1);
-$filter-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/* ===== FILTERS ===== */
+$filter-primary: var(--color-primary);
+$filter-primary-light: var(--color-primary-light);
+$filter-primary-dark: var(--color-primary-dark);
+$filter-secondary: var(--color-secondary);
+$filter-accent: var(--color-accent);
+$filter-bg: var(--color-surface);
+$filter-border: var(--color-border);
+$filter-text: var(--color-text);
+$filter-text-light: var(--color-text-secondary);
+$filter-hover: var(--color-surface-alt);
+$filter-focus: rgba(var(--color-primary-rgb), 0.1);
+$filter-shadow: var(--shadow-md);
 $filter-radius: 12px;
 $transition-fast: 150ms ease;
 $transition-normal: 250ms ease;
 
-/* ===== FILTERS CONTAINER ===== */
 .meal-filters {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+  background: var(--gradient-surface);
   padding: 2rem;
   border-radius: $filter-radius;
   margin-bottom: 2.5rem;
@@ -794,7 +649,7 @@ $transition-normal: 250ms ease;
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, $filter-primary, $filter-secondary);
+    background: var(--gradient-primary);
   }
 
   @media (max-width: $mobile-breakpoint) {
@@ -823,7 +678,6 @@ $transition-normal: 250ms ease;
   }
 }
 
-/* ===== FILTER GROUP ===== */
 .filter-group {
   margin-bottom: 1.75rem;
   padding-bottom: 1.75rem;
@@ -857,7 +711,6 @@ $transition-normal: 250ms ease;
   }
 }
 
-/* ===== INPUT FIELDS ===== */
 input[type="text"],
 input[type="date"],
 input[type="number"],
@@ -871,13 +724,13 @@ select {
   background: $filter-bg;
   transition: all $transition-fast;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234caf50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234caf50' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 16px;
 
   @media (max-width: $mobile-breakpoint) {
-    width: 100%; 
+    width: 100%;
     max-width: 100%;
     padding: 0.875rem 1rem;
     font-size: 1rem;
@@ -885,18 +738,18 @@ select {
 
   &:hover {
     border-color: $filter-primary-light;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
   }
 
   &:focus {
     outline: none;
     border-color: $filter-primary;
-    box-shadow: 0 0 0 4px $filter-focus, 0 3px 8px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    box-shadow: 0 0 0 4px $filter-focus, var(--shadow-sm);
+    background-color: $filter-bg;
   }
 
   &::placeholder {
-    color: lighten($filter-text-light, 20%);
+    color: $filter-text-light;
     font-size: 0.95rem;
   }
 
@@ -914,7 +767,6 @@ select {
   }
 }
 
-/* Specjalne style dla selekta */
 select {
   cursor: pointer;
   min-width: 250px;
@@ -922,10 +774,11 @@ select {
   option {
     padding: 0.75rem;
     font-size: 1rem;
+    background: $filter-bg;
+    color: $filter-text;
   }
 }
 
-/* ===== CHECKBOX ===== */
 .filter-group.checkbox {
   border-bottom: none;
   padding-bottom: 0;
@@ -987,7 +840,6 @@ select {
   }
 }
 
-/* ===== DATE RANGE ===== */
 .date-range {
   display: flex;
   flex-wrap: wrap;
@@ -1024,13 +876,12 @@ select {
   }
 }
 
-/* ===== RADIO GROUP ===== */
 .radio-group {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+  background: var(--color-surface-alt);
   border-radius: 12px;
   border: 2px solid rgba($filter-border, 0.7);
 
@@ -1060,7 +911,7 @@ select {
       justify-content: center;
       gap: 0.625rem;
       padding: 1rem 0.75rem;
-      background: white;
+      background: $filter-bg;
       border: 2px solid $filter-border;
       border-radius: 10px;
       font-size: 1rem;
@@ -1088,15 +939,15 @@ select {
         border-color: $filter-primary-light;
         background: $filter-hover;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-sm);
       }
 
       &[for="mealTypeAll"]::before {
-        background: linear-gradient(90deg, $filter-primary, $filter-secondary);
+        background: var(--gradient-primary);
       }
 
       &[for="mealTypeBreakfast"]::before {
-        background: #ffb74d;
+        background: var(--color-warning);
       }
 
       &[for="mealTypeLunch"]::before {
@@ -1104,7 +955,7 @@ select {
       }
 
       &[for="mealTypeDinner"]::before {
-        background: #7986cb;
+        background: var(--color-accent);
       }
 
       &[for="mealTypeSnack"]::before {
@@ -1114,10 +965,10 @@ select {
 
     &:checked + label {
       border-color: $filter-primary;
-      background: white;
+      background: $filter-bg;
       color: $filter-primary-dark;
       font-weight: 700;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+      box-shadow: var(--shadow-sm);
 
       &::before {
         background: currentColor;
@@ -1132,7 +983,6 @@ select {
   }
 }
 
-/* ===== MULTI SELECT ===== */
 .multi-select {
   max-height: 250px;
   overflow-y: auto;
@@ -1201,7 +1051,7 @@ select {
           height: 20px;
           border: 2px solid $filter-border;
           border-radius: 5px;
-          background: white;
+          background: $filter-bg;
           transition: all $transition-fast;
           flex-shrink: 0;
         }
@@ -1233,11 +1083,10 @@ select {
   }
 }
 
-
 .range-inputs {
   display: flex;
-  align-items: flex-end; 
-  gap: 1rem; 
+  align-items: flex-end;
+  gap: 1rem;
   margin-bottom: 1rem;
 
   @media (max-width: 600px) {
@@ -1249,8 +1098,8 @@ select {
   .input-group {
     display: flex;
     flex-direction: column;
-    flex: 1; 
-    min-width: 0; 
+    flex: 1;
+    min-width: 0;
 
     label {
       font-size: 0.95rem;
@@ -1273,6 +1122,7 @@ select {
         border-radius: 8px;
         font-size: 1rem;
         background: $filter-bg;
+        color: $filter-text;
         transition: all $transition-fast;
 
         &:hover {
@@ -1316,7 +1166,7 @@ select {
   width: auto;
   min-width: 250px;
   padding: 1.125rem 2rem;
-  background: linear-gradient(135deg, $filter-primary, $filter-primary-dark);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: 12px;
@@ -1340,9 +1190,9 @@ select {
   }
 
   &:hover {
-    background: linear-gradient(135deg, $filter-primary-dark, #1b5e20);
+    background: linear-gradient(135deg, $filter-primary-dark, $filter-primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+    box-shadow: var(--shadow-lg);
   }
 
   &:active {
@@ -1370,7 +1220,7 @@ select {
         position: relative;
         width: 60px;
         height: 32px;
-        background: #c8e6c9;
+        background: $filter-border;
         border-radius: 34px;
         transition: background-color $transition-fast;
 
@@ -1381,10 +1231,10 @@ select {
           height: 28px;
           left: 2px;
           top: 2px;
-          background: white;
+          background: $filter-bg;
           border-radius: 50%;
           transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+          box-shadow: var(--shadow-sm);
         }
       }
 
@@ -1443,10 +1293,10 @@ select {
     .filter-group {
       padding: 1.25rem;
       margin-bottom: 1.25rem;
-      background: white;
+      background: $filter-bg;
       border-radius: 10px;
       border: 2px solid $filter-border;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
     }
   }
 }
@@ -1469,8 +1319,76 @@ select {
   outline: none;
 }
 
+/* ===== LOADING ===== */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid $border-color;
+    border-top-color: $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: $text-light;
+    font-size: 1rem;
+  }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $background-alt;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-color;
+  border-radius: 4px;
+
+  &:hover {
+    background: $border-color;
+  }
+}
+
+[role="button"] {
+  cursor: pointer;
+}
+
+[tabindex]:focus-visible {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
 @media print {
-  .meal-filters {
+  .meal-sort,
+  .meal-filters,
+  .pagination,
+  .meal-actions {
     display: none !important;
+  }
+
+  .day-header {
+    cursor: default !important;
+    background: none !important;
+    border-bottom: 1px solid #ccc !important;
+  }
+
+  .day-group {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
   }
 }

@@ -5,11 +5,12 @@ form {
   max-width: 700px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #f4fff9; 
+  background-color: var(--color-surface-alt);
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
   font-family: 'Arial', sans-serif;
   box-sizing: border-box;
+  border: 1px solid var(--color-border);
 
   @media (max-width: $mobile-breakpoint) {
     margin: 1rem auto;
@@ -22,7 +23,7 @@ form {
   }
 
   h3 {
-    color: #2e7d32;
+    color: var(--color-primary);
     margin-bottom: 1rem;
     font-size: 1.5rem;
 
@@ -32,7 +33,7 @@ form {
   }
 
   h4 {
-    color: #388e3c;
+    color: var(--color-primary-light);
     margin-top: 1.5rem;
     font-size: 1.2rem;
 
@@ -45,7 +46,7 @@ form {
     display: block;
     margin-bottom: 1rem;
     font-weight: 500;
-    color: #1b5e20;
+    color: var(--color-text);
     font-size: 0.95rem;
 
     @media (max-width: $mobile-breakpoint) {
@@ -57,12 +58,13 @@ form {
       width: 100%;
       padding: 0.5rem 0.75rem;
       margin-top: 0.25rem;
-      border: 1px solid #a5d6a7;
+      border: 1px solid var(--color-border);
       border-radius: 6px;
-      background-color: #e8f5e9;
+      background-color: var(--color-surface);
       font-size: 1rem;
       transition: border-color 0.2s;
       box-sizing: border-box;
+      color: var(--color-text);
 
       @media (max-width: $mobile-breakpoint) {
         padding: 0.4rem 0.6rem;
@@ -70,19 +72,19 @@ form {
       }
 
       &:focus {
-        border-color: #2e7d32;
+        border-color: var(--color-primary);
         outline: none;
-        box-shadow: 0 0 5px rgba(46, 125, 50, 0.5);
+        box-shadow: 0 0 5px rgba(var(--color-primary-rgb), 0.5);
       }
     }
   }
 
   .ingredient-row {
-    border: 1px solid #c8e6c9;
+    border: 1px solid var(--color-border);
     padding: 1rem;
     margin-bottom: 1rem;
     border-radius: 8px;
-    background-color: #f1f8e9;
+    background-color: var(--color-surface);
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -98,7 +100,7 @@ form {
     button {
       margin-top: 0.5rem;
       padding: 0.4rem 0.8rem;
-      background-color: #66bb6a;
+      background-color: var(--color-primary);
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -112,13 +114,13 @@ form {
       }
 
       &:hover {
-        background-color: #2e7d32;
+        background-color: var(--color-primary-dark);
       }
     }
   }
 
   .error {
-    color: #d32f2f;
+    color: var(--color-error);
     font-size: 0.85rem;
     margin-top: 0.25rem;
     display: block;
@@ -136,7 +138,7 @@ form {
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    background-color: #43a047;
+    background-color: var(--color-primary);
     color: #fff;
     transition: background-color 0.2s;
     font-size: 0.95rem;
@@ -149,11 +151,11 @@ form {
     }
 
     &:hover:not(:disabled) {
-      background-color: #2e7d32;
+      background-color: var(--color-primary-dark);
     }
 
     &:disabled {
-      background-color: #a5d6a7;
+      background-color: var(--color-border);
       cursor: not-allowed;
     }
   }
@@ -180,19 +182,17 @@ button {
   box-sizing: border-box;
 }
 
-
-
 .autocomplete {
   position: relative;
   z-index: 1000;
   
   .add-new {
-    color: #007bff;
+    color: var(--color-secondary);
     font-weight: bold;
-    background-color: #f8f9fa;
+    background-color: var(--color-surface-alt);
     
     &:hover {
-      background-color: #e9ecef;
+      background-color: var(--color-surface);
     }
   }
 }
@@ -201,7 +201,7 @@ button {
   margin: 10px 0;
   
   .btn-add-custom {
-    background-color: #28a745;
+    background-color: var(--color-success);
     color: white;
     border: none;
     padding: 8px 12px;
@@ -209,7 +209,7 @@ button {
     cursor: pointer;
     
     &:hover {
-      background-color: #218838;
+      background-color: var(--color-success);
     }
   }
 }
@@ -220,7 +220,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-dark);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -228,11 +228,13 @@ button {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--color-surface);
   padding: 20px;
   border-radius: 8px;
   width: 90%;
   max-width: 400px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
   
   .modal-body {
     margin: 20px 0;
@@ -241,8 +243,10 @@ button {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--color-border);
       border-radius: 4px;
+      background-color: var(--color-surface);
+      color: var(--color-text);
     }
   }
   
@@ -259,17 +263,17 @@ button {
       cursor: pointer;
       
       &:first-child {
-        background-color: #6c757d;
+        background-color: var(--color-text-muted);
         color: white;
       }
       
       &:last-child {
-        background-color: #007bff;
+        background-color: var(--color-secondary);
         color: white;
       }
       
       &:disabled {
-        background-color: #ccc;
+        background-color: var(--color-border);
         cursor: not-allowed;
       }
     }
@@ -277,8 +281,8 @@ button {
 }
 
 .custom-badge {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: var(--color-warning);
+  color: var(--color-text);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.8em;

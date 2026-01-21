@@ -5,11 +5,11 @@ $small-mobile: 480px;
   max-width: 800px;
   margin: 2rem auto;
   padding: 1.5rem;
-  background-color: #e8f5e9; 
-  border: 1px solid #c8e6c9;
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   font-family: 'Arial', sans-serif;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-md);
   box-sizing: border-box;
 
   @media (max-width: $mobile-breakpoint) {
@@ -23,7 +23,7 @@ $small-mobile: 480px;
   }
 
   h2 {
-    color: #2e7d32; 
+    color: var(--color-primary);
     margin-bottom: 1rem;
     font-size: 1.8rem;
 
@@ -33,7 +33,7 @@ $small-mobile: 480px;
   }
 
   h3 {
-    color: #2e7d32;
+    color: var(--color-primary);
     margin-bottom: 1rem;
     font-size: 1.4rem;
 
@@ -44,7 +44,7 @@ $small-mobile: 480px;
 
   p {
     margin: 0.3rem 0;
-    color: #1b5e20;
+    color: var(--color-text);
     font-weight: 500;
     font-size: 1rem;
 
@@ -59,13 +59,14 @@ $small-mobile: 480px;
     margin-bottom: 1rem;
 
     li {
-      background-color: #c8e6c9;
+      background-color: var(--color-surface);
       margin-bottom: 0.5rem;
       padding: 0.5rem 0.75rem;
       border-radius: 6px;
-      color: #1b5e20;
+      color: var(--color-text);
       box-sizing: border-box;
       font-size: 0.95rem;
+      border: 1px solid var(--color-border);
 
       @media (max-width: $mobile-breakpoint) {
         font-size: 0.85rem;
@@ -82,7 +83,7 @@ $small-mobile: 480px;
     cursor: pointer;
     font-size: 15px;
     color: #fff;
-    background-color: #43a047;
+    background-color: var(--color-primary);
     transition: background-color 0.2s;
     display: inline-block;
     text-decoration: none;
@@ -95,11 +96,11 @@ $small-mobile: 480px;
     }
 
     &:hover:not(:disabled) {
-      background-color: #2e7d32;
+      background-color: var(--color-primary-dark);
     }
 
     &:disabled {
-      background-color: #a5d6a7;
+      background-color: var(--color-border);
       cursor: not-allowed;
     }
   }

@@ -213,6 +213,22 @@
         }
       ],
       "totalCalories": 1
+    },
+    {
+      "userId": "1",
+      "name": "jgvj",
+      "date": "2026-01-21T18:39",
+      "items": [
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 100,
+          "isCustomProduct": false,
+          "customProductCalories": null
+        }
+      ],
+      "totalCalories": 165,
+      "id": "I8ejMU3"
     }
   ],
   "users": [

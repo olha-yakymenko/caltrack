@@ -3,15 +3,16 @@ $tablet-breakpoint: 1024px;
 
 .info-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+  background: linear-gradient(135deg, var(--color-surface-alt), var(--color-background));
   font-family: 'Segoe UI', sans-serif;
-  color: #2e3d2f;
+  color: var(--color-text);
+  transition: background 0.3s ease;
 }
 
 .hero {
   text-align: center;
   padding: 4rem 1.5rem;
-  background: linear-gradient(135deg, #2e7d32, #43a047);
+  background: var(--gradient-primary);
   color: white;
 
   @media (max-width: $mobile-breakpoint) {
@@ -60,11 +61,12 @@ $tablet-breakpoint: 1024px;
 }
 
 .card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 14px;
   padding: 2rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-lg);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--color-border);
 
   @media (max-width: $mobile-breakpoint) {
     padding: 1.5rem;
@@ -72,12 +74,12 @@ $tablet-breakpoint: 1024px;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-xl);
   }
 
   h2 {
     margin-bottom: 1rem;
-    color: #2e7d32;
+    color: var(--color-primary);
     font-size: 1.5rem;
 
     @media (max-width: $mobile-breakpoint) {
@@ -88,6 +90,7 @@ $tablet-breakpoint: 1024px;
   p {
     line-height: 1.6;
     font-size: 1rem;
+    color: var(--color-text-secondary);
 
     @media (max-width: $mobile-breakpoint) {
       font-size: 0.9rem;
@@ -103,6 +106,7 @@ $tablet-breakpoint: 1024px;
       margin-bottom: 0.6rem;
       position: relative;
       font-size: 0.95rem;
+      color: var(--color-text);
 
       @media (max-width: $mobile-breakpoint) {
         font-size: 0.85rem;
@@ -113,7 +117,7 @@ $tablet-breakpoint: 1024px;
         content: "✔";
         position: absolute;
         left: 0;
-        color: #43a047;
+        color: var(--color-primary);
         font-weight: bold;
       }
     }

@@ -50,6 +50,21 @@
         ⚙️
       </button>
 
+
+      <button 
+    class="theme-toggle"
+    (click)="toggleTheme()"
+    [attr.aria-label]="isDarkTheme ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'"
+    [title]="isDarkTheme ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'"
+  >
+    <span class="theme-toggle-icon" [class.dark]="isDarkTheme">
+      {{ isDarkTheme ? '🌙' : '☀️' }}
+    </span>
+    <span class="theme-toggle-text">
+      {{ isDarkTheme ? 'Tryb ciemny' : 'Tryb jasny' }}
+    </span>
+  </button>
+
       <button (click)="authService.logout()" >  
         Wyloguj
       </button>
@@ -67,5 +82,4 @@
   ></app-user-settings>
 }
 
-<hr>
 <router-outlet></router-outlet>

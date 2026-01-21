@@ -4,6 +4,7 @@ import { UserSettingsComponent } from '../user-settings/user-settings.component'
 import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; 
 import { CommonModule, Location } from '@angular/common';
 import { AuthService } from '../serivces/auth.service';
+import { ThemeService } from '../serivces/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -52,5 +53,20 @@ export class NavbarComponent {
 
   public back(): void {
     void this.location.back();
+  }
+
+
+  isDarkTheme = false;
+  
+  constructor(private themeService: ThemeService) {} // Dodaj wstrzyknięcie
+  
+  ngOnInit() {
+    this.themeService.theme$.subscribe(theme => {
+      this.isDarkTheme = theme === 'dark-theme';
+    });
+  }
+  
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 }
