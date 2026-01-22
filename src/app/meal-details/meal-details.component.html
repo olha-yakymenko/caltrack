@@ -23,3 +23,13 @@
   <!-- <button type="button" [routerLink]="['/meal/list']">Wróć do listy</button> -->
 
 </div>
+
+
+<app-confirmation-modal
+  [isVisible]="showModal"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [confirmText]="modalConfirmText"
+  (confirmed)="onModalConfirmed()"
+  (cancelled)="onModalCancelled()"
+></app-confirmation-modal>

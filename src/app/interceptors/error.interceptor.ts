@@ -4,48 +4,33 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { NotificationService } from '../serivces/notification.service';
 
+function resolveErrorMessage(error: HttpErrorResponse, router: Router): string {
+  const statusMessages: Record<number, string> = {
+    400: typeof error.error === 'object' && error.error !== null && 'message' in error.error
+        ? String((error.error as { message: unknown }).message)
+        : 'Błędne dane',
+    403: 'Brak uprawnień do wykonania tej akcji',
+    404: 'Zasób nie istnieje',
+    409: 'Nie można usunąć – element jest powiązany z innymi danymi',
+    500: 'Błąd serwera'
+  };
+
+  if (error.status === 403) {
+    void router.navigate(['/no-access']);
+  }
+
+  return statusMessages[error.status] ?? 'Wystąpił nieznany błąd';
+}
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const notificationService = inject(NotificationService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let message = 'Wystąpił nieznany błąd';
-      const notificationType: 'error' | 'warning' = 'error';
+      const message = resolveErrorMessage(error, router);
 
-      switch (error.status) {
-        case 400:
-          if (
-            typeof error.error === 'object' &&
-            error.error !== null &&
-            'message' in error.error
-          ) {
-            message = String((error.error as { message: unknown }).message);
-          } else {
-            message = 'Błędne dane';
-          }
-          break;
-
-        case 403:
-          message = 'Brak uprawnień do wykonania tej akcji';
-          void router.navigate(['/no-access']);
-          break;
-
-        case 404:
-          message = 'Zasób nie istnieje';
-          break;
-
-        // case 409:
-        //   message = 'Nie można usunąć – element jest powiązany z innymi danymi';
-        //   notificationType = 'warning';
-        //   break;
-
-        case 500:
-          message = 'Błąd serwera';
-          break;
-      }
-
-      notificationService[notificationType](message);
+      notificationService.error(message);
 
       return throwError(() => error);
     })

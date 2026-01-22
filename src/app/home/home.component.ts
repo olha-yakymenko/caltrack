@@ -5,17 +5,23 @@ import { combineLatest, map } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CalorieCalculatorComponent } from '../calorie-calculator/calorie-calculator.component';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, RouterLink, CalorieCalculatorComponent],
+  imports: [AsyncPipe, CommonModule, RouterLink, CalorieCalculatorComponent, ConfirmationModalComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   private authService = inject(AuthService);
   private mealService = inject(MealService);
+
+  public showModal = false;
+  public modalTitle = '';
+  public modalMessage = '';
+  public modalConfirmText = 'OK';
 
   public stats$ = combineLatest([
     this.authService.currentUser$,
@@ -60,18 +66,18 @@ export class HomeComponent implements OnInit {
   public getRingGradient(percent: number, isOverLimit: boolean): string {
     const color = isOverLimit ? '#ff4d4d' : '#4caf50';
     
-return `conic-gradient(${color} ${percent * 3.6}deg, #eee 0deg)`;
+    return `conic-gradient(${color} ${percent * 3.6}deg, #eee 0deg)`;
   }
 
   public toggleCalculator(): void {
     if (!this.isPremiumUser) {
-      alert('Ta funkcja jest dostępna tylko dla użytkowników premium!');
+      this.showModalMessage('Funkcja premium', 'Ta funkcja jest dostępna tylko dla użytkowników premium!');
       
 return;
     }
     
     if (!this.isUserActive) {
-      alert('Twoje konto jest zawieszone. Aktywuj konto, aby korzystać z funkcji premium.');
+      this.showModalMessage('Konto zawieszone', 'Twoje konto jest zawieszone. Aktywuj konto, aby korzystać z funkcji premium.');
       
 return;
     }
@@ -81,10 +87,35 @@ return;
 
   public onCaloriesCalculated(calories: number): void {
     console.log('Obliczone kalorie:', calories);
-    alert(`Obliczone dzienne zapotrzebowanie: ${calories} kcal\nMożesz ustawić tę wartość jako swój dzienny limit w ustawieniach profilu.`);
+    this.showModalMessage(
+      'Obliczone zapotrzebowanie',
+      `Obliczone dzienne zapotrzebowanie: ${calories} kcal\nMożesz ustawić tę wartość jako swój dzienny limit w ustawieniach profilu.`
+    );
   }
 
   public onCalculatorClose(): void {
     this.showCalculator = false;
+  }
+
+  private showModalMessage(title: string, message: string): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalConfirmText = 'OK';
+    this.showModal = true;
+  }
+
+  public onModalConfirmed(): void {
+    this.resetModal();
+  }
+
+  public onModalCancelled(): void {
+    this.resetModal();
+  }
+
+  private resetModal(): void {
+    this.showModal = false;
+    this.modalTitle = '';
+    this.modalMessage = '';
+    this.modalConfirmText = 'OK';
   }
 }

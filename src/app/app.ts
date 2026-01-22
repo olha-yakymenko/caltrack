@@ -14,10 +14,8 @@ export class AppComponent implements OnInit{
   protected readonly title = signal('caltrack');
   private translate = inject(TranslateService);
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const savedLang = localStorage.getItem('preferredLanguage') || 'pl';
     this.translate.use(savedLang);
-    
-    console.log('🌐 Translate service initialized, language:', savedLang);
   }
 }

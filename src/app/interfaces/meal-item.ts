@@ -1,5 +1,5 @@
 export interface MealItem {
-    productId: string;
-    grams: number;
-    ccal: number;
+    readonly productId: string;
+    readonly grams: number;
+    readonly ccal: number;
 }

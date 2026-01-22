@@ -1,10 +1,10 @@
 import { MealItem } from "./meal-item";
 
 export interface Meal {
-    id?: string;
-    userId: string;
-    name: string;
-    date: string; 
-    items: MealItem[];
-    totalCalories?: number;
+    readonly id?: string;
+    readonly userId: string;
+    readonly name: string;
+    readonly date: string; 
+    readonly items: MealItem[];
+    readonly totalCalories?: number;
 }

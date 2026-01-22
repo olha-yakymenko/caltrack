@@ -22,7 +22,9 @@ function attachToken(req: HttpRequest<unknown>, authService: AuthService): HttpR
   }
 
   if (token) {
-    authService.logout();
+    authService.logout().catch((error) => {
+      console.error('Błąd podczas wylogowania', error);
+    });
   }
 
   return req;

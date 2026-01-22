@@ -3,23 +3,26 @@ import { MealService } from '../serivces/meal.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Meal } from '../interfaces/meal';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
-
-interface MealItemWithProduct {
-  productId: string;
-  grams: number;
-  productName: string;
-  caloriesPer100g: number;
-}
+import { MealItemWithProduct } from '../interfaces/meal-item-with-product';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-meal-details',
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule, ConfirmationModalComponent],
   templateUrl: './meal-details.component.html',
   styleUrls: ['./meal-details.component.scss']
 })
 export class MealDetailsComponent implements OnInit {
   public meal: Meal | null = null;
   public itemsWithDetails: MealItemWithProduct[] = [];
+
+  public showModal = false;
+  public modalTitle = '';
+  public modalMessage = '';
+  public modalConfirmText = 'OK';
+  private pendingAction: 'delete' | null = null;
+  private pendingMealId: string | null = null;
 
   private mealService = inject(MealService);
   private route = inject(ActivatedRoute);
@@ -31,7 +34,7 @@ export class MealDetailsComponent implements OnInit {
       switchMap((params) => {
         const id = params.get('id')!;
         
-return combineLatest([
+        return combineLatest([
           this.mealService.getMeal(id),
           this.mealService.getProducts()
         ]);
@@ -48,7 +51,7 @@ return combineLatest([
         meal.items.map((item) => {
           const product = products.find((p) => p.id === item.productId);
           
-return {
+          return {
             productId: item.productId,
             grams: item.grams,
             productName: product?.name ?? 'Nieznany',
@@ -62,24 +65,61 @@ return {
     });
   }
 
-public deleteMeal(id?: string): void {
-  if (!id) {
-    console.error('deleteMeal called without id');
-    
+  public deleteMeal(id?: string): void {
+    if (!id) {
+      console.error('deleteMeal called without id');
+      this.showModalMessage('Błąd', 'Nie można usunąć posiłku - brak identyfikatora');
+      
 return;
+    }
+
+    this.pendingMealId = id;
+    this.pendingAction = 'delete';
+    this.showModalMessage(
+      'Usuwanie posiłku',
+      `Czy na pewno chcesz usunąć posiłek "${this.meal?.name}"?`,
+      'Tak',
+      'Nie'
+    );
   }
 
-  this.mealService.deleteMeal(id).subscribe({
-    next: () => {
-      console.log('Meal deleted');
-      alert('Meal deleted');
-    },
-    error: (err) => {
-      console.error('Error deleting meal:', err);
-      alert('Failed to delete meal. Check console.');
-    },
-  });
-}
+  private showModalMessage(title: string, message: string, confirmText: string = 'OK', _: string = ''): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalConfirmText = confirmText;
+    this.showModal = true;
+  }
 
+  public onModalConfirmed(): void {
+    if (this.pendingAction === 'delete' && this.pendingMealId) {
+      this.executeDeleteMeal(this.pendingMealId);
+    }
+    this.resetModal();
+  }
 
+  public onModalCancelled(): void {
+    this.resetModal();
+  }
+
+  private resetModal(): void {
+    this.showModal = false;
+    this.pendingAction = null;
+    this.pendingMealId = null;
+    this.modalTitle = '';
+    this.modalMessage = '';
+    this.modalConfirmText = 'OK';
+  }
+
+  private executeDeleteMeal(id: string): void {
+    this.mealService.deleteMeal(id).subscribe({
+      next: () => {
+        console.log('Meal deleted');
+        this.showModalMessage('Sukces', 'Posiłek został pomyślnie usunięty.');
+      },
+      error: (err) => {
+        console.error('Error deleting meal:', err);
+        this.showModalMessage('Błąd', 'Nie udało się usunąć posiłku. Spróbuj ponownie.');
+      },
+    });
+  }
 }

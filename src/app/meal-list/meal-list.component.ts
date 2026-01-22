@@ -8,19 +8,9 @@ import { Product } from '../interfaces/product';
 import { NotificationService } from '../serivces/notification.service';
 import { AuthService } from '../serivces/auth.service';
 import { CommonModule } from '@angular/common';
+import { DayGroup } from '../interfaces/day-group';
+import { ExtendedMeal } from '../interfaces/extended-meal';
 
-interface ExtendedMeal extends Meal {
-  imageUrl?: string;
-  hasImage?: boolean;
-}
-
-interface DayGroup {
-  date: string;
-  formattedDate: string;
-  totalCalories: number;
-  meals: Meal[];
-  expanded: boolean;
-}
 
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | '';
 
@@ -56,6 +46,7 @@ export class MealListComponent implements OnInit {
   public hasImage = false;
   public isLoadingProducts = false; 
   public currentUserId: string = '';
+  public filtersExpanded = false;
 
   public filterForm = new FormGroup({
     name: new FormControl(''),
@@ -172,8 +163,17 @@ return date.toLocaleDateString('pl-PL', {
     
   }
 
-public toggleDayGroup(dayGroup: DayGroup): void {
-    dayGroup.expanded = !dayGroup.expanded;
+  public toggleDayGroup(dayGroup: DayGroup): void {
+    this.dayGroups = this.dayGroups.map((group) => {
+      if (group.date === dayGroup.date) {
+        return {
+          ...group,
+          expanded: !group.expanded
+        } as DayGroup; 
+      }
+      
+return group;
+    });
   }
 
   private calculateGramsRange(): void {
@@ -430,4 +430,9 @@ public toggleDayGroup(dayGroup: DayGroup): void {
     this.currentPage = 1;
     this.applyPagination();
   }
+
+  public toggleFilters(): void {
+    this.filtersExpanded = !this.filtersExpanded;
+  }
+
 }

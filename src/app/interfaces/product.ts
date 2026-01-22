@@ -1,6 +1,6 @@
 export interface Product {
-    id: string;
-    name: string;
-    caloriesPer100g: number;
-    userId?: string;
+    readonly id: string;
+    readonly name: string;
+    readonly caloriesPer100g: number;
+    readonly userId?: string;
 }

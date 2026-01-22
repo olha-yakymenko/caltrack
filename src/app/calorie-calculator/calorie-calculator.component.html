@@ -143,3 +143,16 @@
     </div>
   }
 </div>
+
+
+<app-confirmation-modal
+  [isVisible]="showModal"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [details]="modalDetails"
+  [confirmText]="modalConfirmText"
+  [cancelText]="modalCancelText"
+  (confirmed)="onModalConfirmed()"
+  (cancelled)="onModalCancelled()"
+  (closed)="onModalClosed()"
+></app-confirmation-modal>

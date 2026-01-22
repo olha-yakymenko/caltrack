@@ -13,7 +13,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { LOCATION_INITIALIZED } from '@angular/common';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
-export function i18nInitializer(): Promise<void> {
+export async function i18nInitializer(): Promise<void> {
   const translate = inject(TranslateService);
   const injector = inject(Injector);
 
@@ -24,13 +24,16 @@ export function i18nInitializer(): Promise<void> {
 
     return new Promise<void>((resolve, reject) => {
       translate.use(langToSet).subscribe({
-        next: () => {},
         error: (err) => {
           console.error(
             `Problem with '${langToSet}' language initialization.`,
             err,
           );
-          reject(err);
+          reject(
+            err instanceof Error
+              ? err
+              : new Error(`Problem with '${langToSet}' language initialization`)
+          );
         },
         complete: () => resolve(),
       });

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UserSettingsComponent } from '../user-settings/user-settings.component';
 import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; 
@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   public showSettings = false;
   public userSettings = { name: '', email: '' };
   public currentLanguage = 'pl';
@@ -38,23 +38,23 @@ export class NavbarComponent {
 
   public isDarkTheme = false;
   
-  constructor() {
+  public constructor() {
     const savedLang = localStorage.getItem('preferredLanguage') || 'pl';
     this.currentLanguage = savedLang;
     this.translate.use(savedLang);
   }
   
-  ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
+  public ngOnInit(): void {
+    this.themeService.theme$.subscribe((theme) => {
       this.isDarkTheme = theme === 'dark-theme';
     });
   }
   
-  toggleTheme(): void {
+  protected toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 
-  changeLanguage(langCode: string): void {
+  protected changeLanguage(langCode: string): void {
     this.currentLanguage = langCode;
     this.translate.use(langCode);
     localStorage.setItem('preferredLanguage', langCode);

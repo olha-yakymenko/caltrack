@@ -1,11 +1,11 @@
 export interface User {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-  role: 'user' | 'admin';
-  isActive: boolean;
-  isPremium: boolean;
-  dailyCalorieLimit: number;
-  token?: string; 
+  readonly id: string;
+  readonly name: string;
+  readonly email: string;
+  readonly password?: string;
+  readonly role: 'user' | 'admin';
+  readonly isActive: boolean;
+  readonly isPremium: boolean;
+  readonly dailyCalorieLimit: number;
+  readonly token?: string; 
 }

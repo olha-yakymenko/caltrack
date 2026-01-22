@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { calorieActions, CalorieFormData } from '../store/calorie/calorie.actions';
 import { calorieFeature, selectHistory, selectCalculationCount, CalorieState } from '../store/calorie/calorie.state';
 import { AuthService } from '../serivces/auth.service';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component'; // Dodaj import
 
 export interface HistoryEntry {
   date: string;
@@ -20,7 +21,7 @@ export interface AppState {
 @Component({
   selector: 'app-calorie-calculator',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationModalComponent], 
   templateUrl: './calorie-calculator.component.html',
   styleUrl: './calorie-calculator.component.scss'
 })
@@ -31,7 +32,15 @@ export class CalorieCalculatorComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private store = inject(Store<AppState>);
 
-  // Observable z NgRx Store
+  public showModal = false;
+  public modalTitle = '';
+  public modalMessage = '';
+  public modalDetails = '';
+  public modalConfirmText = 'Tak';
+  public modalCancelText = 'Nie';
+  private modalAction: 'applyLimit' | null = null;
+
+
   public readonly result$: Observable<number | null> = this.store.select(calorieFeature.selectResult);
   public readonly bmr$: Observable<number | null> = this.store.select(calorieFeature.selectBmr);
   public readonly loading$: Observable<boolean> = this.store.select(calorieFeature.selectLoading);
@@ -39,7 +48,7 @@ export class CalorieCalculatorComponent implements OnInit, OnDestroy {
   public readonly history$: Observable<HistoryEntry[]> = this.store.select(selectHistory);
   public readonly calculationCount$: Observable<number> = this.store.select(selectCalculationCount);
 
-  // Zmienne lokalne
+
   public result: number | null = null;
   public bmr: number | null = null;
   public loading = false;
@@ -97,17 +106,15 @@ export class CalorieCalculatorComponent implements OnInit, OnDestroy {
 
   public calculateCalories(): void {
     if (!this.form.age || !this.form.weight || !this.form.height) {
-      alert('Proszę wypełnić wszystkie wymagane pola');
+      this.showErrorModal('Błąd walidacji', 'Proszę wypełnić wszystkie wymagane pola');
       
 return;
     }
 
-    // Dispatch akcji do NgRx
     this.store.dispatch(calorieActions.calculateCalories({ 
       formData: this.form 
     }));
 
-    // Subskrypcja do wyniku
     const resultSubscription = this.result$.subscribe((result) => {
       if (result && !this.loading) {
         this.calculate.emit(result);
@@ -134,26 +141,78 @@ return;
     this.closed.emit();
   }
 
-  public async applyToLimit(): Promise<void> {
+  public applyToLimit(): void {
     if (!this.result) {
-      alert('Najpierw oblicz zapotrzebowanie kaloryczne!');
+      this.showErrorModal('Błąd', 'Najpierw oblicz zapotrzebowanie kaloryczne!');
       
 return;
     }
 
-    const confirmed = confirm(`Czy na pewno chcesz ustawić ${this.result} kcal jako swój dzienny limit kalorii?`);
-    
-    if (!confirmed) {
-      return;
+    this.modalAction = 'applyLimit';
+    this.modalTitle = 'Ustawienie limitu kalorii';
+    this.modalMessage = `Czy na pewno chcesz ustawić ${this.result} kcal jako swój dzienny limit kalorii?`;
+    this.modalDetails = 'Obecny limit zostanie zastąpiony nową wartością.';
+    this.modalConfirmText = 'Ustaw limit';
+    this.modalCancelText = 'Anuluj';
+    this.showModal = true;
+  }
+
+  public onModalConfirmed(): void {
+    if (this.modalAction === 'applyLimit') {
+      this.executeApplyToLimit()
+        .then(() => console.log('Limit zastosowany'))
+        .catch((err) => console.error('Błąd podczas stosowania limitu:', err));
     }
+    this.resetModal();
+  }
+
+
+  public onModalCancelled(): void {
+    this.resetModal();
+  }
+
+  public onModalClosed(): void {
+    this.resetModal();
+  }
+
+  private resetModal(): void {
+    this.showModal = false;
+    this.modalAction = null;
+    this.modalTitle = '';
+    this.modalMessage = '';
+    this.modalDetails = '';
+    this.modalConfirmText = 'Tak';
+    this.modalCancelText = 'Nie';
+  }
+
+  private async executeApplyToLimit(): Promise<void> {
+    if (!this.result) return;
 
     try {
       await this.authService.updateDailyCalorieLimit(this.result).toPromise();
-      alert(`Dzienny limit kalorii został zmieniony na ${this.result} kcal`);
+      this.showSuccessModal('Sukces', `Dzienny limit kalorii został zmieniony na ${this.result} kcal`);
       this.onClose(); 
     } catch {
-      alert('Nie udało się zaktualizować limitu kalorii. Spróbuj ponownie.');
+      this.showErrorModal('Błąd', 'Nie udało się zaktualizować limitu kalorii. Spróbuj ponownie.');
     }
+  }
+
+  private showSuccessModal(title: string, message: string): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalDetails = '';
+    this.modalConfirmText = 'OK';
+    this.modalCancelText = '';
+    this.showModal = true;
+  }
+
+  private showErrorModal(title: string, message: string): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalDetails = '';
+    this.modalConfirmText = 'OK';
+    this.modalCancelText = '';
+    this.showModal = true;
   }
 
   public getGoalLabel(): string {
@@ -163,7 +222,7 @@ return;
       gain: 'Przyrost masy'
     };
     
-return labels[this.form.goal];
+    return labels[this.form.goal];
   }
 
   public getActivityLabel(): string {
@@ -175,7 +234,7 @@ return labels[this.form.goal];
       veryActive: 'Bardzo aktywna (2x dziennie)'
     };
     
-return labels[this.form.activityLevel];
+    return labels[this.form.activityLevel];
   }
 
   public testNgRxActions(): void {
@@ -202,5 +261,4 @@ return labels[this.form.activityLevel];
   public toggleDebug(): void {
     this.showDebug = !this.showDebug;
   }
-
 }
