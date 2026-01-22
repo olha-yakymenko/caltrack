@@ -4,11 +4,17 @@
     <button class="close-btn" (click)="onClose()">✕</button>
   </div>
   
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  }
+  
   <div class="calculator-form">
     <div class="form-row">
       <div class="form-group">
         <label for="gender">Płeć</label>
-        <select id="gender" [(ngModel)]="form.gender" class="form-control">
+        <select id="gender" [(ngModel)]="form.gender" class="form-control" [disabled]="loading">
           <option value="male">Mężczyzna</option>
           <option value="female">Kobieta</option>
         </select>
@@ -24,6 +30,7 @@
           max="100"
           class="form-control"
           placeholder="np. 30"
+          [disabled]="loading"
         />
       </div>
     </div>
@@ -39,6 +46,7 @@
           max="200"
           class="form-control"
           placeholder="np. 70"
+          [disabled]="loading"
         />
       </div>
       
@@ -52,13 +60,14 @@
           max="250"
           class="form-control"
           placeholder="np. 175"
+          [disabled]="loading"
         />
       </div>
     </div>
     
     <div class="form-group">
       <label for="activity">Poziom aktywności</label>
-      <select id="activity" [(ngModel)]="form.activityLevel" class="form-control">
+      <select id="activity" [(ngModel)]="form.activityLevel" class="form-control" [disabled]="loading">
         <option value="sedentary">🚶‍♂️ Siedzący (brak ćwiczeń)</option>
         <option value="light">🏃‍♂️ Lekka (1-3 ćwiczenia/tydzień)</option>
         <option value="moderate">🏋️‍♂️ Umiarkowana (3-5 ćwiczeń/tydzień)</option>
@@ -69,7 +78,7 @@
     
     <div class="form-group">
       <label for="goal">Cel</label>
-      <select id="goal" [(ngModel)]="form.goal" class="form-control">
+      <select id="goal" [(ngModel)]="form.goal" class="form-control" [disabled]="loading">
         <option value="maintain">⚖️ Utrzymanie wagi</option>
         <option value="loss">⬇️ Utrata wagi</option>
         <option value="gain">⬆️ Przyrost masy</option>
@@ -77,11 +86,23 @@
     </div>
     
     <div class="form-actions">
-      <button (click)="calculateCalories()" class="btn btn-calculate">
-         Oblicz zapotrzebowanie
+      <button 
+        (click)="calculateCalories()" 
+        class="btn btn-calculate"
+        [disabled]="loading || !form.age || !form.weight || !form.height"
+      >
+        @if (loading) {
+          <span>⏳ Obliczanie...</span>
+        } @else {
+          <span>🧮 Oblicz zapotrzebowanie</span>
+        }
       </button>
-      <button (click)="resetForm()" class="btn btn-reset">
-         Resetuj
+      <button 
+        (click)="resetForm()" 
+        class="btn btn-reset"
+        [disabled]="loading"
+      >
+        🔄 Resetuj
       </button>
     </div>
   </div>
@@ -100,10 +121,18 @@
       </div>
       
       <div class="result-actions">
-        <button (click)="applyToLimit()" class="btn btn-apply">
+        <button 
+          (click)="applyToLimit()" 
+          class="btn btn-apply"
+          [disabled]="loading"
+        >
           💾 Zastosuj jako dzienny limit
         </button>
-        <button (click)="resetForm()" class="btn btn-clear">
+        <button 
+          (click)="resetForm()" 
+          class="btn btn-clear"
+          [disabled]="loading"
+        >
           ✏️ Nowe obliczenia
         </button>
       </div>

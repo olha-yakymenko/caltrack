@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UserSettingsComponent } from '../user-settings/user-settings.component';
 import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive'; 
@@ -18,12 +18,20 @@ import { ThemeService } from '../serivces/theme.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   public showSettings = false;
   public userSettings = { name: '', email: '' };
 
   protected authService = inject(AuthService);
   private location = inject(Location);
+  private themeService = inject(ThemeService);
+  public isDarkTheme: boolean = false;
+
+  public ngOnInit(): void {
+    this.themeService.theme$.subscribe((theme) => {
+      this.isDarkTheme = theme === 'dark-theme';
+    });
+  }
 
   public openSettings(): void {
     const user = this.authService.getCurrentUser();
@@ -54,19 +62,9 @@ export class NavbarComponent {
   public back(): void {
     void this.location.back();
   }
-
-
-  isDarkTheme = false;
+    
   
-  constructor(private themeService: ThemeService) {} // Dodaj wstrzyknięcie
-  
-  ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      this.isDarkTheme = theme === 'dark-theme';
-    });
-  }
-  
-  toggleTheme(): void {
+  public toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 }

@@ -229,6 +229,22 @@
       ],
       "totalCalories": 165,
       "id": "I8ejMU3"
+    },
+    {
+      "userId": "1",
+      "name": "fxv",
+      "date": "2026-01-22T10:55",
+      "items": [
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 100,
+          "isCustomProduct": false,
+          "customProductCalories": null
+        }
+      ],
+      "totalCalories": 165,
+      "id": "kf3ZgWE"
     }
   ],
   "users": [
@@ -240,7 +256,7 @@
       "role": "user",
       "isPremium": true,
       "isActive": true,
-      "dailyCalorieLimit": 2500
+      "dailyCalorieLimit": 2114
     },
     {
       "id": "2",

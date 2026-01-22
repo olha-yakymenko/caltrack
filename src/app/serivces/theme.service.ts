@@ -1,6 +1,6 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,13 @@ export class ThemeService {
   private readonly DARK_THEME = 'dark-theme';
   private readonly LIGHT_THEME = 'light-theme';
   
-  private currentTheme = new BehaviorSubject<string>(this.LIGHT_THEME);
-  theme$ = this.currentTheme.asObservable();
+  private readonly currentTheme = new BehaviorSubject<string>(this.LIGHT_THEME);
+  public readonly theme$: Observable<string> = this.currentTheme.asObservable();
   
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+
+  public constructor() {
     this.initializeTheme();
   }
 
@@ -37,7 +37,7 @@ export class ThemeService {
     }
   }
 
-  setTheme(theme: string): void {
+  public setTheme(theme: string): void {
     this.currentTheme.next(theme);
     
     if (isPlatformBrowser(this.platformId)) {
@@ -50,18 +50,18 @@ export class ThemeService {
     }
   }
 
-  toggleTheme(): void {
+  public toggleTheme(): void {
     const newTheme = this.currentTheme.value === this.LIGHT_THEME 
       ? this.DARK_THEME 
       : this.LIGHT_THEME;
     this.setTheme(newTheme);
   }
 
-  isDarkTheme(): boolean {
+  public isDarkTheme(): boolean {
     return this.currentTheme.value === this.DARK_THEME;
   }
 
-  getCurrentTheme(): string {
+  public getCurrentTheme(): string {
     return this.currentTheme.value;
   }
 }
