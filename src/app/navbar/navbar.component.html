@@ -1,75 +1,90 @@
+
+
 <nav>
     <a routerLink="/" 
        routerLinkActive="active" 
        [routerLinkActiveOptions]="{ exact: true }"
        [appDisabledIfInactive]="true">  
-      Home
+      {{ 'NAV.HOME' | translate }}
     </a>
     
     <a routerLink="/info" 
        routerLinkActive="active" 
        [routerLinkActiveOptions]="{ exact: true }"
        [appDisabledIfInactive]="true">  
-      Info
+      {{ 'NAV.INFO' | translate }}
     </a>
     
     <a routerLink="/meal/list" 
        routerLinkActive="active" 
        [routerLinkActiveOptions]="{ exact: true }"
        [appDisabledIfInactive]="true">  
-      Lista posiłków
+      {{ 'NAV.MEALS' | translate }}
     </a>
     
     <a routerLink="/meal/form" 
        routerLinkActive="active" 
        [routerLinkActiveOptions]="{ exact: true }"
        [appDisabledIfInactive]="true">  
-      Dodaj posiłek
+      {{ 'NAV.ADD_MEAL' | translate }}
     </a>
     
     <button (click)="back()">  
-      Cofnij
+      {{ 'NAV.BACK' | translate }}
     </button>
 
     @if (authService.currentUser$ | async; as user) {
-      <div>Witaj, <strong>{{ user.name }}</strong> ({{ user.email }})</div>
+      <div>{{ 'COMMON.WELCOME' | translate }}, <strong>{{ user.name }}</strong> ({{ user.email }})</div>
       
       @if (user.role === 'admin') {
         <a routerLink="/admin" [appDisabledIfInactive]="true">  
-          Panel Admina
+          {{ 'NAV.ADMIN' | translate }}
         </a>
       }
       
       <button 
         class="settings-btn"
         (click)="openSettings()"
-        aria-label="Ustawienia użytkownika"
-        title="Edytuj dane użytkownika"
+        [attr.aria-label]="'NAV.SETTINGS' | translate"
+        [title]="'NAV.SETTINGS' | translate"
         [appDisabledIfInactive]="true"  
       >
-        ⚙️
+        ⚙️ {{ 'NAV.SETTINGS' | translate }}
       </button>
 
+      <div class="language-selector">
+        <select 
+          [(ngModel)]="currentLanguage" 
+          (change)="changeLanguage(currentLanguage)"
+          class="language-select"
+        >
+          @for (lang of availableLanguages; track lang.code) {
+            <option [value]="lang.code">
+              {{ lang.flag }} {{ 'LANGUAGES.' + lang.code.toUpperCase() | translate }}
+            </option>
+          }
+        </select>
+      </div>
 
       <button 
-    class="theme-toggle"
-    (click)="toggleTheme()"
-    [attr.aria-label]="isDarkTheme ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'"
-    [title]="isDarkTheme ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'"
-  >
-    <span class="theme-toggle-icon" [class.dark]="isDarkTheme">
-      {{ isDarkTheme ? '🌙' : '☀️' }}
-    </span>
-    <span class="theme-toggle-text">
-      {{ isDarkTheme ? 'Tryb ciemny' : 'Tryb jasny' }}
-    </span>
-  </button>
+        class="theme-toggle"
+        (click)="toggleTheme()"
+        [attr.aria-label]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
+        [title]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
+      >
+        <span class="theme-toggle-icon" [class.dark]="isDarkTheme">
+          {{ isDarkTheme ? '🌙' : '☀️' }}
+        </span>
+        <span class="theme-toggle-text">
+          {{ isDarkTheme ? ('THEME.DARK_MODE' | translate) : ('THEME.LIGHT_MODE' | translate) }}
+        </span>
+      </button>
 
-      <button (click)="authService.logout()" >  
-        Wyloguj
+      <button (click)="authService.logout()">  
+        {{ 'NAV.LOGOUT' | translate }}
       </button>
     } @else {
-      <a routerLink="/login">Zaloguj się</a>
+      <a routerLink="/login">{{ 'NAV.LOGIN' | translate }}</a>
     }
 </nav>
 
@@ -81,5 +96,3 @@
     (closed)="closeSettings()"
   ></app-user-settings>
 }
-
-<router-outlet></router-outlet>

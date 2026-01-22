@@ -1,0 +1,48 @@
+{
+  "APP": {
+    "TITLE": "CalTrack - Calorie Manager",
+    "DESCRIPTION": "Calorie tracking application"
+  },
+  "NAV": {
+    "HOME": "Home",
+    "MEALS": "Meals",
+    "ADD_MEAL": "Add Meal",
+    "BACK": "Back",
+    "ADMIN": "Admin Panel",
+    "SETTINGS": "Settings",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout",
+    "INFO": "Information"
+  },
+  "COMMON": {
+    "WELCOME": "Welcome"
+  },
+    "THEME": {
+    "SWITCH_TO_LIGHT": "Switch to light mode",
+    "SWITCH_TO_DARK": "Switch to dark mode",
+    "DARK_MODE": "Dark mode",
+    "LIGHT_MODE": "Light mode"
+  },
+   "AUTH": {
+    "LOGIN": "Login",
+    "EMAIL": "Email", 
+    "PASSWORD": "Password",
+    "LOGIN_BUTTON": "Sign in",
+    "PLACEHOLDER_EMAIL": "Enter your email",
+    "PLACEHOLDER_PASSWORD": "Enter your password",
+    "ERRORS": {
+      "INVALID_CREDENTIALS": "Invalid email or password",
+      "USER_NOT_FOUND": "User not found"
+    }
+  },
+  "HOME": {
+    "WELCOME": "Welcome",
+    "DAILY_STATS": "Daily Statistics",
+    "CALORIES_CONSUMED": "Calories consumed",
+    "CALORIES_LIMIT": "Daily limit"
+  },
+  "LANGUAGES": {
+    "PL": "Polish",
+    "EN": "English"
+  }
+}

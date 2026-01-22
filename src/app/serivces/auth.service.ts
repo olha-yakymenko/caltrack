@@ -5,6 +5,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { User } from '../interfaces/user';
 import { NotificationService } from './notification.service';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 interface JwtPayload {
   sub: string;          
@@ -34,6 +35,8 @@ export class AuthService {
   private notificationService = inject(NotificationService);
   private http = inject(HttpClient);
 
+  private router = inject(Router);
+  
   public constructor() {
     this.initializeAuth();
   }
@@ -182,6 +185,7 @@ return !!token && this.isTokenValid(token);
     this.clearAuthData();
     this.notificationService.info('Wylogowano pomyślnie');
     console.log('Użytkownik wylogowany');
+    this.router.navigate(['/login']);
   }
 
   public updateUserProfile(userData: { name: string; email: string }): Observable<User> {

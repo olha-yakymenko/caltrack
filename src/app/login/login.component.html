@@ -1,12 +1,21 @@
-<h2>Logowanie</h2>
+<h2>{{ 'AUTH.LOGIN' | translate }}</h2>
 
 <form [formGroup]="loginForm" (ngSubmit)="submit()">
   
-  <input type="email" formControlName="email" placeholder="Email" />
-  <input type="password" formControlName="password" placeholder="Hasło" />
+  <input 
+    type="email" 
+    formControlName="email" 
+    [placeholder]="'AUTH.PLACEHOLDER_EMAIL' | translate" 
+  />
+  
+  <input 
+    type="password" 
+    formControlName="password" 
+    [placeholder]="'AUTH.PLACEHOLDER_PASSWORD' | translate" 
+  />
 
   <button type="submit" [disabled]="loginForm.invalid">
-    Zaloguj
+    {{ 'AUTH.LOGIN_BUTTON' | translate }}
   </button>
 
 </form>

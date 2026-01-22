@@ -1,0 +1,52 @@
+{
+  "APP": {
+    "TITLE": "CalTrack - Menadżer Kalorii",
+    "DESCRIPTION": "Aplikacja do śledzenia kalorii"
+  },
+  
+  "NAV": {
+    "HOME": "Strona główna",
+    "MEALS": "Posiłki",
+    "ADD_MEAL": "Dodaj posiłek",
+    "BACK": "Cofnij",
+    "ADMIN": "Panel Admina",
+    "SETTINGS": "Ustawienia",
+    "LOGIN": "Zaloguj się",
+    "LOGOUT": "Wyloguj",
+    "INFO": "Informacja"
+  },
+
+  "COMMON": {
+    "WELCOME": "Witaj"
+  },
+
+    "THEME": {
+    "SWITCH_TO_LIGHT": "Przełącz na tryb jasny",
+    "SWITCH_TO_DARK": "Przełącz na tryb ciemny",
+    "DARK_MODE": "Tryb ciemny",
+    "LIGHT_MODE": "Tryb jasny"
+  },
+
+  "AUTH": {
+    "LOGIN": "Logowanie",
+    "EMAIL": "Email",
+    "PASSWORD": "Hasło",
+    "LOGIN_BUTTON": "Zaloguj się",
+    "PLACEHOLDER_EMAIL": "Wpisz swój email",
+    "PLACEHOLDER_PASSWORD": "Wpisz swoje hasło",
+    "ERRORS": {
+      "INVALID_CREDENTIALS": "Nieprawidłowy email lub hasło",
+      "USER_NOT_FOUND": "Użytkownik nie znaleziony"
+    }
+  },
+  
+  "HOME": {
+    "WELCOME": "Witaj",
+    "DAILY_STATS": "Statystyki dzienne",
+    "CALORIES_CONSUMED": "Spożyte kalorie",
+    "CALORIES_LIMIT": "Dzienny limit"
+  },
+  "LANGUAGES": {
+    "PL": "Polski",
+    "EN": "Angielski"  }
+}
