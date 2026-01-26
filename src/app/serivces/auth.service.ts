@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { tap, map, catchError, switchMap } from 'rxjs/operators';
 import { User } from '../interfaces/user';
 import { NotificationService } from './notification.service';
 import { jwtDecode }  from 'jwt-decode';
@@ -316,6 +316,89 @@ return;
     }
     
     console.groupEnd();
+  }
+
+
+
+  public register(userData: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    agreeToTerms: boolean;
+  }): Observable<AuthResponse> {
+    if (userData.password !== userData.confirmPassword) {
+      throw new Error('Hasła nie są identyczne');
+    }
+
+    if (!this.isPasswordValid(userData.password)) {
+      throw new Error('Hasło musi mieć co najmniej 8 znaków, w tym dużą literę, cyfrę i znak specjalny');
+    }
+
+    return this.http.get<User[]>(`${this.apiUrl}?email=${userData.email}`).pipe(
+      map((users) => {
+        if (users.length > 0) {
+          throw new Error('Użytkownik z tym adresem email już istnieje');
+        }
+        
+        return users;
+      }),
+      switchMap(() => {
+        const newUser: Omit<User, 'id'> = {
+          name: userData.name,
+          email: userData.email,
+          password: userData.password,
+          role: 'user',
+          isActive: true,
+          isPremium: false,
+          dailyCalorieLimit: 2000 
+        };
+
+        return this.http.post<User>(this.apiUrl, newUser);
+      }),
+      map((createdUser) => {
+        const token = this.generateJwtToken(createdUser);
+        
+        const safeUser: User = {
+          id: createdUser.id,
+          name: createdUser.name,
+          email: createdUser.email,
+          role: createdUser.role,
+          isActive: createdUser.isActive,
+          isPremium: createdUser.isPremium,
+          dailyCalorieLimit: createdUser.dailyCalorieLimit
+        };
+        
+        return {
+          user: safeUser,
+          token,
+          expiresIn: 3600
+        };
+      }),
+      tap((response) => {
+        this.setAuthData(response.token, response.user);
+        this.notificationService.success('Rejestracja zakończona sukcesem!');
+        
+        console.log('Nowy użytkownik zarejestrowany:', response.user);
+      }),
+      catchError((error: Error) => {
+        this.notificationService.error('Błąd rejestracji: ' + error.message);
+        throw error;
+      })
+    );
+  }
+  private isPasswordValid(password: string): boolean {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    return password.length >= minLength && 
+          hasUpperCase && 
+          hasLowerCase && 
+          hasNumbers && 
+          hasSpecialChar;
   }
 }
 

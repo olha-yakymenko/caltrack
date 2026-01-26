@@ -7,6 +7,7 @@ import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { authGuard } from './guard/auth.guard';
 import { roleGuard } from './guard/role.guard'; 
 import { NoAccessComponent } from './no-access/no-access.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
     {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   },
   {
     path: 'no-access',

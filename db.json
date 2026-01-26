@@ -245,6 +245,38 @@
       ],
       "totalCalories": 165,
       "id": "kf3ZgWE"
+    },
+    {
+      "userId": "1",
+      "name": "des",
+      "date": "2026-01-24T21:57",
+      "items": [
+        {
+          "productId": "2",
+          "productName": "Kurczak",
+          "grams": 100,
+          "isCustomProduct": false,
+          "customProductCalories": null
+        }
+      ],
+      "totalCalories": 165,
+      "id": "z9fQphp"
+    },
+    {
+      "userId": "1",
+      "name": "``asd",
+      "date": "2026-01-25T13:41",
+      "items": [
+        {
+          "productId": "7f9f",
+          "productName": "dca",
+          "grams": 10,
+          "isCustomProduct": true,
+          "customProductCalories": 100
+        }
+      ],
+      "totalCalories": 10,
+      "id": "bSiMCMi"
     }
   ],
   "users": [
@@ -252,6 +284,7 @@
       "id": "1",
       "name": "Jan Kowalskiiii",
       "email": "a@a.com",
+      "password": "a",
       "role": "user",
       "isActive": true,
       "isPremium": true,
@@ -266,6 +299,16 @@
       "isActive": true,
       "isPremium": true,
       "dailyCalorieLimit": 3796
+    },
+    {
+      "name": "nowy",
+      "email": "a@a",
+      "password": "Olhayes11!",
+      "role": "user",
+      "isActive": true,
+      "isPremium": false,
+      "dailyCalorieLimit": 2000,
+      "id": "gFf3nuF"
     }
   ]
 }

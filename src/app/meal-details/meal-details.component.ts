@@ -6,10 +6,11 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
 import { MealItemWithProduct } from '../interfaces/meal-item-with-product';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { CommonModule } from '@angular/common';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive';
 
 @Component({
   selector: 'app-meal-details',
-  imports: [RouterModule, CommonModule, ConfirmationModalComponent],
+  imports: [RouterModule, CommonModule, ConfirmationModalComponent, DisabledIfInactiveDirective],
   templateUrl: './meal-details.component.html',
   styleUrls: ['./meal-details.component.scss']
 })
@@ -39,10 +40,8 @@ export class MealDetailsComponent implements OnInit {
           this.mealService.getProducts()
         ]);
       }),
-      /** tap – debug / efekt uboczny */
-      tap(([meal, products]) => {
-        console.log('Meal:', meal);
-        console.log('Products:', products);
+      /** tap – efekt uboczny */
+      tap(([meal, _]) => {
         this.meal = meal;
       }),
 
@@ -67,7 +66,6 @@ export class MealDetailsComponent implements OnInit {
 
   public deleteMeal(id?: string): void {
     if (!id) {
-      console.error('deleteMeal called without id');
       this.showModalMessage('Błąd', 'Nie można usunąć posiłku - brak identyfikatora');
       
 return;
@@ -113,11 +111,9 @@ return;
   private executeDeleteMeal(id: string): void {
     this.mealService.deleteMeal(id).subscribe({
       next: () => {
-        console.log('Meal deleted');
         this.showModalMessage('Sukces', 'Posiłek został pomyślnie usunięty.');
       },
-      error: (err) => {
-        console.error('Error deleting meal:', err);
+      error: () => {
         this.showModalMessage('Błąd', 'Nie udało się usunąć posiłku. Spróbuj ponownie.');
       },
     });

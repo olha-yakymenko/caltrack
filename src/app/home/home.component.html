@@ -55,6 +55,7 @@
         <app-calorie-calculator
           (calculate)="onCaloriesCalculated($event)"
           (closed)="onCalculatorClose()"
+          [appDisabledIfInactive]="true"
         ></app-calorie-calculator>
       </div>
     }
@@ -66,7 +67,7 @@
       
       <div class="prompt-actions">
         <a routerLink="/login" class="login-btn">Zaloguj się</a>
-        <a routerLink="/register" class="register-btn">Załóż konto</a>
+        <a routerLink="/register" class="register-btn">Rejestracja</a>
       </div>
       
       <div class="features">

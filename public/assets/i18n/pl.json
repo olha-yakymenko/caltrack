@@ -34,6 +34,8 @@
     "LOGIN_BUTTON": "Zaloguj się",
     "PLACEHOLDER_EMAIL": "Wpisz swój email",
     "PLACEHOLDER_PASSWORD": "Wpisz swoje hasło",
+    "VALIDATION_EMAIL": "Wprowadź poprawny adres email",
+    "VALIDATION_PASSWORD": "Hasło jest wymagane",
     "ERRORS": {
       "INVALID_CREDENTIALS": "Nieprawidłowy email lub hasło",
       "USER_NOT_FOUND": "Użytkownik nie znaleziony"
@@ -48,5 +50,11 @@
   },
   "LANGUAGES": {
     "PL": "Polski",
-    "EN": "Angielski"  }
+    "EN": "Angielski"  
+  },
+    "DATE": {
+    "SHORT": "dd.MM.yyyy",
+    "TODAY": "Dzisiaj",
+    "YESTERDAY": "Wczoraj"
+  }
 }

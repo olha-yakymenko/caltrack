@@ -1,0 +1,147 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Rejestracja</h2>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label for="name">Imię i nazwisko</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name"
+          placeholder="Wprowadź imię i nazwisko"
+          [class.is-invalid]="name.invalid && name.touched"
+        />
+        @if (name.invalid && name.touched) {
+          <div class="invalid-feedback">
+            @if (name.errors?.['required']) {
+              <span>To pole jest wymagane</span>
+            }
+            @if (name.errors?.['minlength']) {
+              <span>Minimum 2 znaki</span>
+            }
+            @if (name.errors?.['maxlength']) {
+              <span>Maksimum 50 znaków</span>
+            }
+          </div>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Adres email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          placeholder="twój@email.com"
+          [class.is-invalid]="email.invalid && email.touched"
+        />
+        @if (email.invalid && email.touched) {
+          <div class="invalid-feedback">
+            @if (email.errors?.['required']) {
+              <span>To pole jest wymagane</span>
+            }
+            @if (email.errors?.['email']) {
+              <span>Nieprawidłowy format email</span>
+            }
+          </div>
+        }
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <div class="password-input">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password"
+            placeholder="Minimum 8 znaków"
+            [class.is-invalid]="password.invalid && password.touched"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePasswordVisibility('password')"
+          >
+            {{ showPassword ? 'Ukryj' : 'Pokaż' }}
+          </button>
+        </div>
+        @if (password.invalid && password.touched) {
+          <div class="invalid-feedback">
+            @if (password.errors?.['required']) {
+              <span>To pole jest wymagane</span>
+            }
+            @if (password.errors?.['minlength']) {
+              <span>Minimum 8 znaków</span>
+            }
+            @if (password.errors?.['pattern']) {
+              <span>Hasło musi zawierać dużą literę, cyfrę i znak specjalny</span>
+            }
+        </div>
+        }
+        <small class="form-text">
+          Hasło musi zawierać co najmniej 8 znaków, w tym dużą literę, cyfrę i znak specjalny
+        </small>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Potwierdź hasło</label>
+        <div class="password-input">
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'" 
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            placeholder="Powtórz hasło"
+            [class.is-invalid]="confirmPassword.invalid && confirmPassword.touched"
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePasswordVisibility('confirmPassword')"
+          >
+            {{ showConfirmPassword ? 'Ukryj' : 'Pokaż' }}
+          </button>
+        </div>
+        @if (confirmPassword.invalid && confirmPassword.touched) {
+          <div class="invalid-feedback">
+            @if (confirmPassword.errors?.['required']) {
+              <span>To pole jest wymagane</span>
+            }
+          </div>
+        }
+        @if (registerForm.errors?.['passwordMismatch'] && confirmPassword.touched) {
+          <small class="text-danger">Hasła nie są identyczne</small>
+        }
+      </div>
+      
+      <div class="form-group button-group">
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="registerForm.invalid || isLoading"
+        >
+          @if (isLoading) {
+            <span>Rejestracja...</span>
+          } @else {
+            <span>Zarejestruj się</span>
+          }
+        </button>
+        
+        <div class="divider">
+          <span>lub</span>
+        </div>
+        
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          routerLink="/login"
+        >
+          Masz już konto? Zaloguj się
+        </button>
+      </div>
+      
+    </form>
+
+  </div>
+</div>

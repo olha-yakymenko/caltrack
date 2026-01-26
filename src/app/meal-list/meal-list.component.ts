@@ -10,13 +10,14 @@ import { AuthService } from '../serivces/auth.service';
 import { CommonModule } from '@angular/common';
 import { DayGroup } from '../interfaces/day-group';
 import { ExtendedMeal } from '../interfaces/extended-meal';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | '';
+type SortType = 'name-asc' | 'name-desc' | 'date-asc' | 'date-desc' | 'calories-asc' | 'calories-desc';
 
 @Component({
   selector: 'app-meal-list',
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, DisabledIfInactiveDirective],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, DisabledIfInactiveDirective, TranslateModule],
   templateUrl: './meal-list.component.html',
   styleUrl: './meal-list.component.scss',
 })
@@ -47,6 +48,7 @@ export class MealListComponent implements OnInit {
   public isLoadingProducts = false; 
   public currentUserId: string = '';
   public filtersExpanded = false;
+  public currentSort: SortType = 'date-desc'; // Domyślne sortowanie
 
   public filterForm = new FormGroup({
     name: new FormControl(''),
@@ -98,7 +100,7 @@ return;
       next: (res: Meal[]) => {
         this.meals = res.filter((meal) => meal.userId === this.currentUserId);
         this.filteredMeals = [...this.meals];
-        this.groupMealsByDay();
+        this.applyCurrentSort(); 
         this.calculateGramsRange();
       },
       error: (err) => {
@@ -112,31 +114,88 @@ return;
     });
   }
 
-private groupMealsByDay(): void {
-  const groupedByDate = this.filteredMeals.reduce((groups, meal) => {
-    const date = this.extractDateOnly(meal.date);
-    (groups[date] ??= []).push(meal); 
+  public isToday(dateString: string): boolean {
+    const date = new Date(dateString);
+    const today = new Date();
     
-  return groups;
-  }, {} as Record<string, Meal[] | undefined>); 
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    
+    return date.getTime() === today.getTime();
+  }
 
-  this.dayGroups = Object.keys(groupedByDate)
-    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    .map((date) => {
+  public isYesterday(dateString: string): boolean {
+    const date = new Date(dateString);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    yesterday.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    
+    return date.getTime() === yesterday.getTime();
+  }
+
+  private groupMealsByDay(): void {
+    const groupedByDate = this.filteredMeals.reduce((groups, meal) => {
+      const date = this.extractDateOnly(meal.date);
+      (groups[date] ??= []).push(meal); 
+      
+      return groups;
+    }, {} as Record<string, Meal[] | undefined>); 
+
+    const groupsArray: DayGroup[] = Object.keys(groupedByDate).map((date) => {
       const meals = groupedByDate[date]!; 
       const totalCalories = meals.reduce((sum, meal) => sum + (meal.totalCalories || 0), 0);
+      
+      const sortedMeals = [...meals].sort((a, b) => a.name.localeCompare(b.name));
       
       return {
         date,
         formattedDate: this.formatDate(date),
         totalCalories,
-        meals: meals.sort((a, b) => a.name.localeCompare(b.name)),
+        meals: sortedMeals,
         expanded: false
       };
     });
 
-  this.applyPagination();
-}
+    this.sortDayGroups(groupsArray);
+    
+    this.dayGroups = groupsArray;
+    this.applyPagination();
+  }
+
+  private sortDayGroups(groups: DayGroup[]): void {
+    switch (this.currentSort) {
+      case 'date-asc':
+        groups.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case 'date-desc':
+        groups.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+      case 'name-asc':
+        groups.sort((a, b) => {
+          const aFirstMeal = a.meals[0]?.name || '';
+          const bFirstMeal = b.meals[0]?.name || '';
+          
+return aFirstMeal.localeCompare(bFirstMeal);
+        });
+        break;
+      case 'name-desc':
+        groups.sort((a, b) => {
+          const aFirstMeal = a.meals[0]?.name || '';
+          const bFirstMeal = b.meals[0]?.name || '';
+          
+return bFirstMeal.localeCompare(aFirstMeal);
+        });
+        break;
+      case 'calories-asc':
+        groups.sort((a, b) => a.totalCalories - b.totalCalories);
+        break;
+      case 'calories-desc':
+        groups.sort((a, b) => b.totalCalories - a.totalCalories);
+        break;
+    }
+  }
 
   private extractDateOnly(fullDate: string): string {
     return fullDate.split('T')[0];
@@ -148,19 +207,22 @@ private groupMealsByDay(): void {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     
-    if (date.toDateString() === today.toDateString()) {
+    today.setHours(0, 0, 0, 0);
+    yesterday.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    
+    if (date.getTime() === today.getTime()) {
       return 'Dzisiaj';
-    } else if (date.toDateString() === yesterday.toDateString()) {
+    } else if (date.getTime() === yesterday.getTime()) {
       return 'Wczoraj';
     } 
       
-return date.toLocaleDateString('pl-PL', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    
+    return date.toLocaleDateString('pl-PL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
   public toggleDayGroup(dayGroup: DayGroup): void {
@@ -203,20 +265,18 @@ return group;
   }
 
   public sortMealsAsc(): void {
-    this.filteredMeals.sort((a, b) => a.name.localeCompare(b.name));
-    this.groupMealsByDay();
+    this.currentSort = 'name-asc';
+    this.applyCurrentSort();
   }
 
   public sortMealsDesc(): void {
-    this.filteredMeals.sort((a, b) => b.name.localeCompare(a.name));
-    this.groupMealsByDay();
+    this.currentSort = 'name-desc';
+    this.applyCurrentSort();
   }
 
   public sortDateAsc(): void {
-    this.filteredMeals.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-    this.groupMealsByDay();
+    this.currentSort = 'date-asc';
+    this.applyCurrentSort();
   }
 
   public toString(value: unknown): string {
@@ -224,23 +284,35 @@ return group;
   }
 
   public sortDateDesc(): void {
-    this.filteredMeals.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-    this.groupMealsByDay();
+    this.currentSort = 'date-desc';
+    this.applyCurrentSort();
   }
 
   public sortCaloriesAsc(): void {
-    this.filteredMeals.sort(
-      (a, b) => (a.totalCalories ?? 0) - (b.totalCalories ?? 0)
-    );
-    this.groupMealsByDay();
+    this.currentSort = 'calories-asc';
+    this.applyCurrentSort();
   }
 
   public sortCaloriesDesc(): void {
-    this.filteredMeals.sort(
-      (a, b) => (b.totalCalories ?? 0) - (a.totalCalories ?? 0)
-    );
+    this.currentSort = 'calories-desc';
+    this.applyCurrentSort();
+  }
+
+  private applyCurrentSort(): void {
+    if (this.currentSort === 'name-asc') {
+      this.filteredMeals.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (this.currentSort === 'name-desc') {
+      this.filteredMeals.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (this.currentSort === 'date-asc') {
+      this.filteredMeals.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else if (this.currentSort === 'date-desc') {
+      this.filteredMeals.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    } else if (this.currentSort === 'calories-asc') {
+      this.filteredMeals.sort((a, b) => (a.totalCalories ?? 0) - (b.totalCalories ?? 0));
+    } else {
+      this.filteredMeals.sort((a, b) => (b.totalCalories ?? 0) - (a.totalCalories ?? 0));
+    }
+    
     this.groupMealsByDay();
   }
 
@@ -324,8 +396,9 @@ return group;
       this.passesImageFilter(meal)
     );
 
+    // Po zastosowaniu filtrów, zastosuj aktualne sortowanie
+    this.applyCurrentSort();
     this.currentPage = 1;
-    this.groupMealsByDay();
   }
 
   private passesNameFilter(meal: Meal): boolean {
@@ -414,7 +487,6 @@ return group;
   public goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
-    this.applyPagination();
   }
 
   public get visibleDayGroups(): DayGroup[] {
@@ -434,5 +506,4 @@ return group;
   public toggleFilters(): void {
     this.filtersExpanded = !this.filtersExpanded;
   }
-
 }

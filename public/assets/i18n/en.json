@@ -30,6 +30,8 @@
     "LOGIN_BUTTON": "Sign in",
     "PLACEHOLDER_EMAIL": "Enter your email",
     "PLACEHOLDER_PASSWORD": "Enter your password",
+    "VALIDATION_EMAIL": "Please enter a valid email address",
+    "VALIDATION_PASSWORD": "Password is required",
     "ERRORS": {
       "INVALID_CREDENTIALS": "Invalid email or password",
       "USER_NOT_FOUND": "User not found"
@@ -44,5 +46,10 @@
   "LANGUAGES": {
     "PL": "Polish",
     "EN": "English"
+  },
+  "DATE": {
+    "SHORT": "MM/dd/yyyy",
+    "TODAY": "Today",
+    "YESTERDAY": "Yesterday"
   }
 }

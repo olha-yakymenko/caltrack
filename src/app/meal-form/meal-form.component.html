@@ -201,6 +201,7 @@
       (click)="back()"
       (keyup.enter)="back()"
       (keyup.space)="back()"
+      [appDisabledIfInactive]="true"
     >
       Wstecz
     </button>
@@ -211,6 +212,7 @@
       [disabled]="mealForm.invalid"
       (keyup.enter)="saveMeal()"
       (keyup.space)="saveMeal()"
+      [appDisabledIfInactive]="true"
     >
       Zapisz posiłek
     </button>
@@ -262,6 +264,7 @@
             (click)="closeAddProductModal()"
             (keyup.enter)="closeAddProductModal()"
             (keyup.space)="closeAddProductModal()"
+            [appDisabledIfInactive]="true"
           >
             Anuluj
           </button>
@@ -272,6 +275,7 @@
             [disabled]="!modalData.caloriesPer100g"
             (keyup.enter)="saveCustomProduct()"
             (keyup.space)="saveCustomProduct()"
+            [appDisabledIfInactive]="true"
           >
             Dodaj produkt
           </button>

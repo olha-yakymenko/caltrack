@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../serivces/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoginFormModel } from '../interfaces/login-form';
 
 @Component({
   selector: 'app-login',
@@ -14,14 +15,21 @@ import { TranslateModule } from '@ngx-translate/core';
 export class LoginComponent {
   public error: string | null = null;
 
-  public loginForm = new FormGroup({
-  email: new FormControl('', [
-    (control) => Validators.required(control),
-    (control) => Validators.email(control),
-  ]),
-  password: new FormControl('', [
-    (control) => Validators.required(control),
-  ]),
+  public loginForm: FormGroup<LoginFormModel> = new FormGroup<LoginFormModel>({
+  email: new FormControl('', {
+    nonNullable: true,
+    validators: [
+      (c) => Validators.required(c),
+      (c) => Validators.email(c),
+    ],
+  }),
+
+  password: new FormControl('', {
+    nonNullable: true,
+    validators: [
+      (c) => Validators.required(c),
+    ],
+  }),
 });
 
 

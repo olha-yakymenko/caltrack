@@ -1,91 +1,110 @@
+<nav class="navbar">
+  <div class="navbar-logo">
+    <a routerLink="/" [appDisabledIfInactive]="true">
+      <img src="./logo.png" alt="Logo" class="logo-img">
+    </a>
+  </div>
 
 
-<nav>
-    <a routerLink="/" 
-       routerLinkActive="active" 
-       [routerLinkActiveOptions]="{ exact: true }"
-       [appDisabledIfInactive]="true">  
-      {{ 'NAV.HOME' | translate }}
-    </a>
-    
-    <a routerLink="/info" 
-       routerLinkActive="active" 
-       [routerLinkActiveOptions]="{ exact: true }"
-       [appDisabledIfInactive]="true">  
-      {{ 'NAV.INFO' | translate }}
-    </a>
-    
-    <a routerLink="/meal/list" 
-       routerLinkActive="active" 
-       [routerLinkActiveOptions]="{ exact: true }"
-       [appDisabledIfInactive]="true">  
-      {{ 'NAV.MEALS' | translate }}
-    </a>
-    
-    <a routerLink="/meal/form" 
-       routerLinkActive="active" 
-       [routerLinkActiveOptions]="{ exact: true }"
-       [appDisabledIfInactive]="true">  
-      {{ 'NAV.ADD_MEAL' | translate }}
-    </a>
-    
-    <button (click)="back()">  
-      {{ 'NAV.BACK' | translate }}
-    </button>
+  <div class="nav-links">
+    <div class="nav-section">
+      <a routerLink="/" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }"
+         [appDisabledIfInactive]="true">  
+        {{ 'NAV.HOME' | translate }}
+      </a>
+      
+      <a routerLink="/info" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }"
+         [appDisabledIfInactive]="true">  
+        {{ 'NAV.INFO' | translate }}
+      </a>
+      
+      <a routerLink="/meal/list" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }"
+         [appDisabledIfInactive]="true">  
+        {{ 'NAV.MEALS' | translate }}
+      </a>
+      
+      <a routerLink="/meal/form" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }"
+         [appDisabledIfInactive]="true">  
+        {{ 'NAV.ADD_MEAL' | translate }}
+      </a>
+      
+      <button class="nav-btn" (click)="back()" [appDisabledIfInactive]="true"  >  
+        {{ 'NAV.BACK' | translate }}
+      </button>
+    </div>
 
     @if (authService.currentUser$ | async; as user) {
-      <div>{{ 'COMMON.WELCOME' | translate }}, <strong>{{ user.name }}</strong> ({{ user.email }})</div>
-      
-      @if (user.role === 'admin') {
-        <a routerLink="/admin" [appDisabledIfInactive]="true">  
-          {{ 'NAV.ADMIN' | translate }}
-        </a>
-      }
-      
-      <button 
-        class="settings-btn"
-        (click)="openSettings()"
-        [attr.aria-label]="'NAV.SETTINGS' | translate"
-        [title]="'NAV.SETTINGS' | translate"
-        [appDisabledIfInactive]="true"  
-      >
-        ⚙️ {{ 'NAV.SETTINGS' | translate }}
-      </button>
-
-      <div class="language-selector">
-        <select 
-          [(ngModel)]="currentLanguage" 
-          (change)="changeLanguage(currentLanguage)"
-          class="language-select"
-        >
-          @for (lang of availableLanguages; track lang.code) {
-            <option [value]="lang.code">
-              {{ lang.flag }} {{ 'LANGUAGES.' + lang.code.toUpperCase() | translate }}
-            </option>
-          }
-        </select>
+      <div class="nav-section user-section">
+        <div class="user-welcome">
+          {{ 'COMMON.WELCOME' | translate }}, 
+          <strong>{{ user.name }}</strong>
+        </div>
+        
+        @if (user.role === 'admin') {
+          <a routerLink="/admin" [appDisabledIfInactive]="true" class="admin-link">  
+            {{ 'NAV.ADMIN' | translate }}
+          </a>
+        }
       </div>
 
-      <button 
-        class="theme-toggle"
-        (click)="toggleTheme()"
-        [attr.aria-label]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
-        [title]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
-      >
-        <span class="theme-toggle-icon" [class.dark]="isDarkTheme">
-          {{ isDarkTheme ? '🌙' : '☀️' }}
-        </span>
-        <span class="theme-toggle-text">
-          {{ isDarkTheme ? ('THEME.DARK_MODE' | translate) : ('THEME.LIGHT_MODE' | translate) }}
-        </span>
-      </button>
+      <div class="nav-section settings-section">
+        <button 
+          class="nav-btn settings-btn"
+          (click)="openSettings()"
+          [attr.aria-label]="'NAV.SETTINGS' | translate"
+          [title]="'NAV.SETTINGS' | translate"
+          [appDisabledIfInactive]="true"  
+        >
+          <span class="icon">⚙️</span>
+          <span class="text">{{ 'NAV.SETTINGS' | translate }}</span>
+        </button>
 
-      <button (click)="authService.logout()">  
-        {{ 'NAV.LOGOUT' | translate }}
-      </button>
+        <div class="language-selector">
+          <select 
+            [(ngModel)]="currentLanguage" 
+            (change)="changeLanguage(currentLanguage)"
+            class="language-select"
+          >
+            @for (lang of availableLanguages; track lang.code) {
+              <option [value]="lang.code">
+                {{ lang.flag }} {{ 'LANGUAGES.' + lang.code.toUpperCase() | translate }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <button 
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
+          [title]="isDarkTheme ? ('THEME.SWITCH_TO_LIGHT' | translate) : ('THEME.SWITCH_TO_DARK' | translate)"
+        >
+          <span class="theme-toggle-icon" [class.dark]="isDarkTheme">
+            {{ isDarkTheme ? '🌙' : '☀️' }}
+          </span>
+          <span class="theme-toggle-text">
+            {{ isDarkTheme ? ('THEME.DARK_MODE' | translate) : ('THEME.LIGHT_MODE' | translate) }}
+          </span>
+        </button>
+
+        <button class="nav-btn" (click)="authService.logout()">  
+          {{ 'NAV.LOGOUT' | translate }}
+        </button>
+      </div>
     } @else {
-      <a routerLink="/login">{{ 'NAV.LOGIN' | translate }}</a>
+      <div class="nav-section">
+        <a routerLink="/login" class="nav-btn">{{ 'NAV.LOGIN' | translate }}</a>
+      </div>
     }
+  </div>
 </nav>
 
 @if (showSettings && userSettings.name && userSettings.email) {

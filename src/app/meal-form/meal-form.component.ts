@@ -10,10 +10,13 @@ import { Product } from '../interfaces/product';
 import { AuthService } from '../serivces/auth.service';
 import { NotificationService } from '../serivces/notification.service';
 import { CommonModule } from '@angular/common';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive';
+import { MealForm } from '../interfaces/meal-form';
+import { MealItemForm } from '../interfaces/meal-item-form';
 
 @Component({
   selector: 'app-meal-form',
-  imports: [ReactiveFormsModule, RouterModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule, FormsModule, DisabledIfInactiveDirective],
   templateUrl: './meal-form.component.html',
   styleUrls: ['./meal-form.component.scss'],
 })
@@ -38,41 +41,43 @@ export class MealFormComponent implements OnInit {
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
-  
-  public mealForm = new FormGroup({
-    name: new FormControl<string | null>('', {
-      validators: [
+
+public mealForm = new FormGroup<MealForm>({
+  name: new FormControl<string>('', {
+    validators: [
         (c) => Validators.required(c),
         (c) => Validators.minLength(3)(c),
         (c) => Validators.maxLength(50)(c),
-      ],
-    }),
-    date: new FormControl<string | null>('', {
-      validators: [(c) => Validators.required(c)],
-    }),
-    items: new FormArray(
-      [
-        new FormGroup({
-          productId: new FormControl<string | null>(null, {
-            validators: [(c) => Validators.required(c)],
-          }),
-          productName: new FormControl<string>(''),
-          grams: new FormControl<number | null>(null, {
-            validators: [
+    ],
+  }),
+
+  date: new FormControl<string>('', {
+    validators: [(c) => Validators.required(c)],
+  }),
+
+  items: new FormArray<FormGroup<MealItemForm>>(
+    [
+      new FormGroup<MealItemForm>({
+        productId: new FormControl<string>('', {
+          validators: [(c) => Validators.required(c)],
+        }),
+        productName: new FormControl<string>(''),
+        grams: new FormControl<number>(0, {
+          validators: [
               (c) => Validators.required(c),
               (c) => Validators.min(1)(c),
               (c) => Validators.max(2000)(c),
-            ],
-          }),
-          isCustomProduct: new FormControl<boolean>(false),
-          customProductCalories: new FormControl<number | null>(null),
+          ],
         }),
-      ],
-      {
-        validators: [(c) => totalGramsValidator(c)],
-      }
-    ),
-  });
+        isCustomProduct: new FormControl<boolean>(false),
+        customProductCalories: new FormControl<number>(0),
+      }),
+    ],
+    {
+      validators: [totalGramsValidator],
+    }
+  ),
+});
 
   private products: Product[] = [];
   public filteredProducts: Product[][] = [];
@@ -108,22 +113,23 @@ return;
         res.items.forEach((item) => {
           this.filteredProducts.push([]);
           this.items.push(
-            new FormGroup({
-              productId: new FormControl<string | null>(
-                String(item.productId),
-                [(c) => Validators.required(c)]
-              ),
-              productName: new FormControl<string>(
-                this.getProductName(String(item.productId))
-              ),
-              grams: new FormControl<number | null>(item.grams, [
-                (c) => Validators.required(c),
-                (c) => Validators.min(1)(c),
-                (c) => Validators.max(2000)(c),
-              ]),
-              isCustomProduct: new FormControl<boolean>(false),
-              customProductCalories: new FormControl<number | null>(null),
-            })
+            new FormGroup<MealItemForm>({
+                productId: new FormControl<string | null>(
+                  String(item.productId),
+                  [(c) => Validators.required(c)]
+                ),
+                productName: new FormControl<string>(
+                  this.getProductName(String(item.productId))
+                ),
+                grams: new FormControl<number | null>(item.grams, [
+                  (c) => Validators.required(c),
+                  (c) => Validators.min(1)(c),
+                  (c) => Validators.max(2000)(c),
+                ]),
+                isCustomProduct: new FormControl<boolean>(false),
+                customProductCalories: new FormControl<number | null>(null),
+              })
+
           );
         });
       },
@@ -140,7 +146,7 @@ return;
     });
   }
 
-  public get items(): FormArray {
+  public get items(): FormArray<FormGroup<MealItemForm>> {
     return this.mealForm.get('items') as FormArray;
   }
 
@@ -216,9 +222,8 @@ return;
             void this.router.navigate(['/meal/list']);
 
           },
-          error: (err) => {
+          error: () => {
             this.notificationService.error('Błąd podczas zapisywania posiłku');
-            console.error('Error saving meal:', err);
           }
         });
       }

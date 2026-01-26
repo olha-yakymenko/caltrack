@@ -6,11 +6,12 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CalorieCalculatorComponent } from '../calorie-calculator/calorie-calculator.component';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { DisabledIfInactiveDirective } from '../directives/disabled-if-inactive.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, RouterLink, CalorieCalculatorComponent, ConfirmationModalComponent],
+  imports: [AsyncPipe, CommonModule, RouterLink, CalorieCalculatorComponent, ConfirmationModalComponent, DisabledIfInactiveDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
