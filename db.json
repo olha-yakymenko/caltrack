@@ -303,7 +303,7 @@
     {
       "name": "nowy",
       "email": "a@a",
-      "password": "Olhayes11!",
+      "password": "a",
       "role": "user",
       "isActive": true,
       "isPremium": false,

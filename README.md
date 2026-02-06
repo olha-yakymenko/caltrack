@@ -26,6 +26,22 @@
 - Partial internationalization (i18n)
 - Clean and responsive UI
 
+## ▶️ Running CalTrack
+### Frontend
+```bash
+ng serve
+```
+
+### Backend
+```bash
+npx json-server db.json
+```
+
+### Linter
+```bash
+ng lint --fix
+```
+
 ## 🧰 Technologies
 
 - **Angular 20**
