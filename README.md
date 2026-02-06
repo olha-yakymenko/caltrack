@@ -29,7 +29,7 @@
 ## 🧰 Technologies
 
 - **Angular 20**
-- **NgRx** – application state management
+- **NgRx** 
 - **TypeScript**
 - **SCSS**
 - **RxJS**
